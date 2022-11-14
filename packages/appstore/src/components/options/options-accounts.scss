@@ -35,11 +35,13 @@
             align-items: center;
             justify-content: flex-end;
             height: 7.2rem;
-            width: 20%;
+            width: 4%;
             background: linear-gradient(to right, transparent, var(--general-main-1));
             @include mobile {
-                right: 0;
+                right: 10%;
+                top: 15%;
                 height: auto;
+                width: auto;
             }
         }
         &--add-options {
@@ -61,11 +63,11 @@
             }
         }
     }
-    &__platformLauncher {
+    &__platformLauncher,
+    &__platformLauncher--applauncher {
         width: 100%;
         display: flex;
         flex-direction: row;
-        background: var(--general-section-5);
         border-radius: 0rem 0.6rem 0.6rem;
         padding: 1.6rem 2.4rem;
         overflow-x: auto;
@@ -89,5 +91,15 @@
             flex-direction: column;
             padding: 1.6rem 0;
         }
+    }
+    &__platformLauncher {
+        background: var(--general-section-5);
+    }
+    &__divider {
+        margin: 1.1rem 0;
+        height: 0.2rem;
+        width: 100%;
+        border: none;
+        background-color: var(--general-section-1);
     }
 }
