@@ -72,7 +72,7 @@ const OptionsAccounts: React.FunctionComponent<TOptionsAccountsProps & RouteComp
         if (loginid === loginid_selected) return;
         await switchAccount(loginid_selected);
     };
-
+    const is_mf = loginid?.startsWith('MF');
     return (
         <div className='options-accounts-container'>
             <div className='options-accounts-container__title'>
@@ -227,6 +227,7 @@ const OptionsAccounts: React.FunctionComponent<TOptionsAccountsProps & RouteComp
                                             number_of_accounts={sortedAccountList.length}
                                             title={'More Options accounts'}
                                             description={'Including cryptocurrencies'}
+                                            is_mf={is_mf}
                                         />
                                     </div>
                                 )}
