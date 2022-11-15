@@ -142,7 +142,7 @@ const TotalAssets = ({ category }: TTotalAssets) => {
                     icon='info'
                     disable_message_icon
                     is_bubble_hover_enabled
-                    message={localize(`Total assets in your Options, DMT5 and Deriv X ${category} accounts`)}
+                    message={localize(`Total assets in your Options, Deriv MT5 and Deriv X ${category} accounts`)}
                     zIndex={9999}
                 />
             </div>
