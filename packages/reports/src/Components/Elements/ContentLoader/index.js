@@ -1,1 +1,1 @@
-export * from './reports-table-row';
+export * from './reports-table-row.jsx';

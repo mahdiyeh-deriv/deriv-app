@@ -1,11 +1,8 @@
 import ContentLoader from 'react-content-loader';
 import React from 'react';
+import PropTypes from 'prop-types';
 
-type TReportsTableRowLoader = {
-    speed?: number;
-};
-
-const ReportsTableRowLoader = ({ speed }: TReportsTableRowLoader) => (
+const ReportsTableRowLoader = ({ speed }) => (
     <ContentLoader
         height={64}
         width={992}
@@ -23,5 +20,9 @@ const ReportsTableRowLoader = ({ speed }: TReportsTableRowLoader) => (
         <rect x='906' y='28' rx='4' ry='4' width='64' height='8' />
     </ContentLoader>
 );
+
+ReportsTableRowLoader.propTypes = {
+    speed: PropTypes.number,
+};
 
 export { ReportsTableRowLoader };
