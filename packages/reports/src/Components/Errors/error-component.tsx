@@ -4,13 +4,13 @@ import { routes } from '@deriv/shared';
 import { localize } from '@deriv/translations';
 
 type TErrorComponent = {
-    header?: string;
-    is_dialog?: boolean;
-    message?: React.ReactElement | string;
-    redirect_label?: string;
-    redirectOnClick?: () => void;
-    should_show_refresh?: boolean;
-    type?: string;
+    header: string;
+    is_dialog: boolean;
+    message: React.ReactElement | string;
+    redirect_label: string;
+    redirectOnClick: () => void;
+    should_show_refresh: boolean;
+    type: string;
 };
 
 const ErrorComponent = ({
@@ -20,7 +20,7 @@ const ErrorComponent = ({
     redirect_label,
     redirectOnClick,
     should_show_refresh = true,
-}: TErrorComponent) => {
+}: Partial<TErrorComponent>) => {
     const refresh_message = should_show_refresh ? localize('Please refresh this page to continue.') : '';
 
     return is_dialog ? (
