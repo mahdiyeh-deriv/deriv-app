@@ -10,16 +10,16 @@ type TItem = {
 };
 
 type TSideList = {
-    from: string;
+    from: number;
     items: Array<TItem>;
     to: number;
 };
 
-const isActive = (from: string, to: number, flag: number) => {
+const isActive = (from: number, to: number, flag: number) => {
     if (flag === 0) {
         return toMoment().endOf('day').unix() === to && from === null;
     }
-    return Math.ceil(+to / 86400) - Math.ceil(+from / 86400) === flag;
+    return Math.ceil(to / 86400) - Math.ceil(from / 86400) === flag;
 };
 
 const SideList = ({ items, from, to }: TSideList) => (
