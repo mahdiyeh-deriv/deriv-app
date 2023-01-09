@@ -1,3 +1,1 @@
-import CalendarIcon from './calendar-icon';
-
-export default CalendarIcon;
+export default from './composite-calendar.jsx';
