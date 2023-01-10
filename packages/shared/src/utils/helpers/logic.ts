@@ -13,27 +13,13 @@ type TTick = {
     symbol?: string;
 };
 
-type TIsEndedBeforeCancellationExpired = TGetEndTime & {
-    cancellation: {
-        ask_price: number;
-        date_expiry: number;
-    };
-};
-
-type TIsSoldBeforeStart = Required<Pick<TContractInfo, 'sell_time' | 'date_start'>>;
-
-type TIsStarted = Required<Pick<TContractInfo, 'is_forward_starting' | 'current_spot_time' | 'date_start'>>;
-
-type TGetEndTime = Pick<TContractInfo, 'is_expired' | 'sell_time' | 'status' | 'tick_count'> &
-    Required<Pick<TContractInfo, 'date_expiry' | 'exit_tick_time' | 'is_path_dependent'>>;
-
 type TGetBuyPrice = {
     contract_info: {
         buy_price: number;
     };
 };
 
-export const isContractElapsed = (contract_info: TGetEndTime, tick: TTick) => {
+export const isContractElapsed = (contract_info: TContractInfo, tick: TTick) => {
     if (isEmptyObject(tick) || isEmptyObject(contract_info)) return false;
     const end_time = getEndTime(contract_info) || 0;
     if (end_time && tick.epoch) {
@@ -43,20 +29,20 @@ export const isContractElapsed = (contract_info: TGetEndTime, tick: TTick) => {
     return false;
 };
 
-export const isEndedBeforeCancellationExpired = (contract_info: TIsEndedBeforeCancellationExpired) => {
+export const isEndedBeforeCancellationExpired = (contract_info: TContractInfo) => {
     const end_time = getEndTime(contract_info) || 0;
-    return !!(contract_info.cancellation && end_time < contract_info.cancellation.date_expiry);
+    return !!(contract_info.cancellation && end_time < (contract_info.cancellation.date_expiry || 0));
 };
 
-export const isSoldBeforeStart = (contract_info: TIsSoldBeforeStart) =>
+export const isSoldBeforeStart = (contract_info: TContractInfo) =>
     contract_info.sell_time && +contract_info.sell_time < +contract_info.date_start;
 
-export const isStarted = (contract_info: TIsStarted) =>
+export const isStarted = (contract_info: TContractInfo) =>
     !contract_info.is_forward_starting || contract_info.current_spot_time > contract_info.date_start;
 
 export const isUserCancelled = (contract_info: TContractInfo) => contract_info.status === 'cancelled';
 
-export const getEndTime = (contract_info: TGetEndTime) => {
+export const getEndTime = (contract_info: TContractInfo) => {
     const {
         exit_tick_time,
         date_expiry,
