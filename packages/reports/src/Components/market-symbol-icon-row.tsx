@@ -1,4 +1,3 @@
-// import PropTypes from 'prop-types';
 import React from 'react';
 import { extractInfoFromShortcode, isHighLow } from '@deriv/shared';
 import { Icon, Popover, IconTradeTypes } from '@deriv/components';
@@ -100,13 +99,5 @@ const MarketSymbolIconRow = ({
         </svg>
     );
 };
-
-// MarketSymbolIconRow.propTypes = {
-//     action: PropTypes.string,
-//     icon: PropTypes.node,
-//     payload: PropTypes.object,
-//     show_description: PropTypes.bool,
-//     should_show_multiplier: PropTypes.bool,
-// };
 
 export default MarketSymbolIconRow;
