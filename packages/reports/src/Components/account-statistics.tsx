@@ -66,7 +66,7 @@ const AccountStatistics = ({ account_statistics, currency }: TAccountStatistics)
     );
 };
 
-// TODO: implement reports storer TRootStore in types.ts
+// TODO: implement reports store TRootStore in types.ts
 export default connect(({ modules, client }: any) => ({
     account_statistics: modules.statement.account_statistics,
     currency: client.currency,
