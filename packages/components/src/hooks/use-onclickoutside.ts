@@ -7,7 +7,7 @@ export interface IClickEvent extends MouseEvent {
 export const useOnClickOutside = (
     ref: RefObject<HTMLElement>,
     handler: (event?: IClickEvent) => void,
-    validationFn: (event: IClickEvent) => boolean
+    validationFn?: (event: IClickEvent) => boolean
 ) => {
     React.useEffect(() => {
         const listener = (event: IClickEvent) => {

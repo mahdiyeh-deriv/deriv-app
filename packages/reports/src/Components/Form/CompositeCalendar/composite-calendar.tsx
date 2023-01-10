@@ -1,16 +1,31 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Loadable from 'react-loadable';
 import { DesktopWrapper, InputField, MobileWrapper, useOnClickOutside } from '@deriv/components';
 import { localize } from '@deriv/translations';
 import { daysFromTodayTo, epochToMoment, toMoment } from '@deriv/shared';
 import { connect } from 'Stores/connect';
+import RootStore from 'Stores/index';
 import CompositeCalendarMobile from './composite-calendar-mobile.jsx';
 import SideList from './side-list.jsx';
 import CalendarIcon from './calendar-icon';
+import TwoMonthPicker from './two-month-picker';
 
-const TwoMonthPicker = Loadable({
-    loader: () => import(/* webpackChunkName: "two-month-picker" */ './two-month-picker.jsx'),
+type TCompositeCalendarProps = {
+    current_focus: string;
+    onChange: (values: { [key: string]: moment.Moment }) => void;
+    setCurrentFocus: () => void;
+    to: number;
+    from: number;
+};
+
+type TTwoMonthPickerLoadableProps = {
+    onChange: (date: moment.Moment) => void;
+    isPeriodDisabled: (date: moment.Moment | number) => boolean;
+    value: number;
+};
+
+const TwoMonthPickerLoadable = Loadable<TTwoMonthPickerLoadableProps, typeof TwoMonthPicker>({
+    loader: () => import(/* webpackChunkName: "two-month-picker" */ './two-month-picker'),
     loading: () => null,
     render(loaded, props) {
         const Component = loaded.default;
@@ -18,7 +33,7 @@ const TwoMonthPicker = Loadable({
     },
 });
 
-const CompositeCalendar = props => {
+const CompositeCalendar: React.FC<TCompositeCalendarProps> = props => {
     const { current_focus, onChange, setCurrentFocus, to, from } = props;
 
     const [show_to, setShowTo] = React.useState(false);
@@ -56,15 +71,15 @@ const CompositeCalendar = props => {
         },
     ]);
 
-    const wrapper_ref = React.useRef();
+    const wrapper_ref = React.useRef() as React.MutableRefObject<HTMLInputElement>;
 
     useOnClickOutside(wrapper_ref, event => {
-        event.stopPropagation();
-        event.preventDefault();
+        event?.stopPropagation();
+        event?.preventDefault();
         hideCalendar();
     });
 
-    const selectDateRange = new_from => {
+    const selectDateRange = (new_from?: number) => {
         hideCalendar();
         applyBatch({
             from: new_from ? toMoment().startOf('day').subtract(new_from, 'day').add(1, 's').unix() : null,
@@ -88,7 +103,7 @@ const CompositeCalendar = props => {
         setShowTo(false);
     };
 
-    const showCalendar = e => {
+    const showCalendar = (e: string) => {
         if (e === 'from') {
             setShowFrom(true);
         }
@@ -97,35 +112,40 @@ const CompositeCalendar = props => {
         }
     };
 
-    const setToDate = date => {
-        updateState('to', epochToMoment(date).endOf('day').unix());
+    const setToDate = (date: moment.Moment) => {
+        updateState(
+            'to',
+            epochToMoment(date as unknown as number)
+                .endOf('day')
+                .unix()
+        );
     };
 
-    const setFromDate = date => {
+    const setFromDate = (date: moment.Moment) => {
         updateState('from', date);
         hideCalendar();
     };
 
-    const updateState = (key, value) => {
+    const updateState = (key: string, value: moment.Moment | number) => {
         apply(key, value);
         hideCalendar();
     };
 
-    const applyBatch = values => {
+    const applyBatch = (values: { [key: string]: any }) => {
         onChange(values);
     };
 
-    const apply = (key, value) => {
+    const apply = (key: string, value: any) => {
         applyBatch({
             [key]: value,
         });
     };
 
-    const isPeriodDisabledTo = date => {
+    const isPeriodDisabledTo = (date: number) => {
         return date + 1 <= from || date > toMoment().endOf('day').unix();
     };
 
-    const isPeriodDisabledFrom = date => {
+    const isPeriodDisabledFrom = (date: number) => {
         return date - 1 >= to;
     };
 
@@ -157,13 +177,17 @@ const CompositeCalendar = props => {
                 {show_to && (
                     <div className='composite-calendar' ref={wrapper_ref}>
                         <SideList from={from} to={to} items={list} />
-                        <TwoMonthPicker value={to} onChange={setToDate} isPeriodDisabled={isPeriodDisabledTo} />
+                        <TwoMonthPickerLoadable value={to} onChange={setToDate} isPeriodDisabled={isPeriodDisabledTo} />
                     </div>
                 )}
                 {show_from && (
                     <div className='composite-calendar' ref={wrapper_ref}>
                         <SideList from={from} to={to} items={list} />
-                        <TwoMonthPicker value={from} onChange={setFromDate} isPeriodDisabled={isPeriodDisabledFrom} />
+                        <TwoMonthPickerLoadable
+                            value={from}
+                            onChange={setFromDate}
+                            isPeriodDisabled={isPeriodDisabledFrom}
+                        />
                     </div>
                 )}
             </DesktopWrapper>
@@ -176,15 +200,8 @@ const CompositeCalendar = props => {
 
 CompositeCalendar.displayName = 'CompositeCalendar';
 
-CompositeCalendar.propTypes = {
-    current_focus: PropTypes.string,
-    from: PropTypes.number,
-    onChange: PropTypes.func,
-    setCurrentFocus: PropTypes.func,
-    to: PropTypes.number,
-};
 export default React.memo(
-    connect(({ ui }) => ({
+    connect(({ ui }: RootStore) => ({
         current_focus: ui.current_focus,
         setCurrentFocus: ui.setCurrentFocus,
     }))(CompositeCalendar)
