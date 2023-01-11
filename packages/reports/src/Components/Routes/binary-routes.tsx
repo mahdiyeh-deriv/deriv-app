@@ -24,7 +24,7 @@ type TRoute = {
     icon?: string;
     default?: boolean;
     to?: string;
-    component?: any;
+    component?: React.ReactNode;
     subroutes?: TRoute[];
 };
 
