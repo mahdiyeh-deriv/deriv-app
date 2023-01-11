@@ -12,7 +12,7 @@ const lazyLoadReportComponent = makeLazyLoader(
 
 type TRoute = {
     path?: string;
-    component: any;
+    component: React.ComponentType;
     is_authenticated?: boolean;
     getTitle: () => string;
     icon_component?: string;
