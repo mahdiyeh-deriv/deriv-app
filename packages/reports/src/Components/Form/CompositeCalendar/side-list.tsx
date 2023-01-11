@@ -1,6 +1,6 @@
 import React from 'react';
 import { toMoment } from '@deriv/shared';
-import ListItem from './list-item.jsx';
+import ListItem from './list-item.tsx';
 
 type TItem = {
     value: string;
