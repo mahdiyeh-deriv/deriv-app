@@ -5,8 +5,8 @@ import { DesktopWrapper, InputField, MobileWrapper, useOnClickOutside } from '@d
 import { localize } from '@deriv/translations';
 import { daysFromTodayTo, epochToMoment, toMoment } from '@deriv/shared';
 import { connect } from 'Stores/connect';
-import CompositeCalendarMobile from './composite-calendar-mobile.jsx';
-import SideList from './side-list.jsx';
+import CompositeCalendarMobile from './composite-calendar-mobile';
+import SideList from './side-list';
 import CalendarIcon from './calendar-icon';
 
 const TwoMonthPicker = Loadable({
