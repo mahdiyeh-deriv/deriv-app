@@ -12,7 +12,19 @@ import MarketSymbolIconRow from '../Components/market-symbol-icon-row.jsx';
 import ProfitLossCell from '../Components/profit_loss_cell.jsx';
 import CurrencyWrapper from '../Components/currency-wrapper';
 
-const getModeFromValue = key => {
+type TActionType =
+    | 'buy'
+    | 'deposit'
+    | 'hold'
+    | 'release'
+    | 'sell'
+    | 'withdrawal'
+    | 'default'
+    | 'adjustment'
+    | 'transfer';
+type TModeType = 'success' | 'warn' | 'danger' | 'info' | 'default' | 'adjustment' | 'transfer';
+
+const getModeFromValue = (key: TActionType): string => {
     const map = {
         buy: 'success',
         deposit: 'success',
@@ -25,20 +37,43 @@ const getModeFromValue = key => {
         transfer: 'transfer',
     };
 
-    if (Object.keys(map).find(x => x === key)) {
-        return map[key];
-    }
+    return map[key] || map.default;
+};
 
-    return map.default;
+type TCellContentProps = {
+    cell_value: string;
+    passthrough: any;
+    row_obj: any;
+    is_footer: boolean;
+};
+
+type THeaderProps = {
+    title: React.ReactNode;
+};
+
+type TColumnTemplateType = {
+    key?: string;
+    title?: React.ReactNode;
+    col_index?: string;
+    renderCellContent?: (props: TCellContentProps) => React.ReactNode;
+    renderHeader?: (props: THeaderProps) => React.ReactNode;
+};
+
+type TMultiplierOpenPositionstemplateProps = {
+    currency: string;
+    onClickCancel: () => void;
+    onClickSell: () => void;
+    getPositionById: (id: string) => any;
+    server_time: object;
 };
 
 /* eslint-disable react/display-name, react/prop-types */
-export const getStatementTableColumnsTemplate = currency => [
+export const getStatementTableColumnsTemplate = (currency: string): TColumnTemplateType[] => [
     {
         key: 'icon',
         title: isMobile() ? '' : localize('Type'),
         col_index: 'icon',
-        renderCellContent: ({ cell_value, passthrough, row_obj }) => {
+        renderCellContent: ({ cell_value, passthrough, row_obj }: TCellContentProps) => {
             const icon = passthrough.isTopUp(row_obj) ? 'icCashierTopUp' : null;
             return (
                 <MarketSymbolIconRow action={cell_value} icon={icon} key={row_obj.transaction_id} payload={row_obj} />
@@ -48,7 +83,7 @@ export const getStatementTableColumnsTemplate = currency => [
     {
         title: localize('Ref. ID'),
         col_index: 'refid',
-        renderCellContent: ({ cell_value, row_obj }) => {
+        renderCellContent: ({ cell_value, row_obj }: TCellContentProps) => {
             return (
                 <Popover
                     alignment={'top'}
@@ -67,7 +102,7 @@ export const getStatementTableColumnsTemplate = currency => [
     {
         title: localize('Transaction time'),
         col_index: 'date',
-        renderCellContent: ({ cell_value }) => {
+        renderCellContent: ({ cell_value }: TCellContentProps) => {
             return <span>{cell_value} GMT</span>;
         },
     },
@@ -75,8 +110,8 @@ export const getStatementTableColumnsTemplate = currency => [
         key: 'mode',
         title: localize('Transaction'),
         col_index: 'action_type',
-        renderCellContent: ({ cell_value, passthrough, row_obj }) => (
-            <Label mode={getModeFromValue(cell_value)}>
+        renderCellContent: ({ cell_value, passthrough, row_obj }: TCellContentProps) => (
+            <Label mode={getModeFromValue(cell_value as TActionType) as TModeType}>
                 {(passthrough.isTopUp(row_obj) && localize('Top up')) || row_obj.action}
             </Label>
         ),
@@ -84,7 +119,7 @@ export const getStatementTableColumnsTemplate = currency => [
     {
         title: localize('Credit/Debit'),
         col_index: 'amount',
-        renderCellContent: ({ cell_value }) => (
+        renderCellContent: ({ cell_value }: TCellContentProps) => (
             <div className={`amount--${getProfitOrLoss(cell_value)}`}>
                 <Money has_sign amount={cell_value.replace(/[,]+/g, '')} currency={currency} />
             </div>
@@ -93,15 +128,17 @@ export const getStatementTableColumnsTemplate = currency => [
     {
         title: localize('Balance'),
         col_index: 'balance',
-        renderCellContent: ({ cell_value }) => <Money amount={cell_value.replace(/[,]+/g, '')} currency={currency} />,
+        renderCellContent: ({ cell_value }: TCellContentProps) => (
+            <Money amount={cell_value.replace(/[,]+/g, '')} currency={currency} />
+        ),
     },
 ];
-export const getProfitTableColumnsTemplate = (currency, items_count) => [
+export const getProfitTableColumnsTemplate = (currency: string, items_count: number): TColumnTemplateType[] => [
     {
         key: 'icon',
         title: isMobile() ? '' : localize('Type'),
         col_index: 'action_type',
-        renderCellContent: ({ cell_value, row_obj, is_footer }) => {
+        renderCellContent: ({ cell_value, row_obj, is_footer }: TCellContentProps) => {
             if (is_footer) {
                 return localize('Profit/loss on the last {{item_count}} contracts', { item_count: items_count });
             }
@@ -115,13 +152,13 @@ export const getProfitTableColumnsTemplate = (currency, items_count) => [
     {
         title: localize('Currency'),
         col_index: 'currency',
-        renderCellContent: ({ is_footer }) =>
+        renderCellContent: ({ is_footer }: TCellContentProps) =>
             is_footer ? '' : <CurrencyWrapper currency={getCurrencyDisplayCode(currency)} />,
     },
     {
         title: localize('Buy time'),
         col_index: 'purchase_time',
-        renderCellContent: ({ cell_value, is_footer }) => {
+        renderCellContent: ({ cell_value, is_footer }: TCellContentProps) => {
             if (is_footer) return '';
             return <span>{cell_value} GMT</span>;
         },
@@ -129,7 +166,7 @@ export const getProfitTableColumnsTemplate = (currency, items_count) => [
     {
         title: localize('Buy price'),
         col_index: 'buy_price',
-        renderCellContent: ({ cell_value, is_footer }) => {
+        renderCellContent: ({ cell_value, is_footer }: TCellContentProps) => {
             if (is_footer) return '';
 
             return <Money amount={cell_value} currency={currency} />;
@@ -138,8 +175,8 @@ export const getProfitTableColumnsTemplate = (currency, items_count) => [
     {
         title: localize('Sell time'),
         col_index: 'sell_time',
-        renderHeader: ({ title }) => <span>{title}</span>,
-        renderCellContent: ({ cell_value, is_footer }) => {
+        renderHeader: ({ title }: THeaderProps) => <span>{title}</span>,
+        renderCellContent: ({ cell_value, is_footer }: TCellContentProps) => {
             if (is_footer) return '';
             return <span>{cell_value} GMT</span>;
         },
@@ -147,7 +184,7 @@ export const getProfitTableColumnsTemplate = (currency, items_count) => [
     {
         title: localize('Sell price'),
         col_index: 'sell_price',
-        renderCellContent: ({ cell_value, is_footer }) => {
+        renderCellContent: ({ cell_value, is_footer }: TCellContentProps) => {
             if (is_footer) return '';
 
             return <Money amount={cell_value} currency={currency} />;
@@ -156,18 +193,18 @@ export const getProfitTableColumnsTemplate = (currency, items_count) => [
     {
         title: localize('Profit / Loss'),
         col_index: 'profit_loss',
-        renderCellContent: ({ cell_value }) => (
+        renderCellContent: ({ cell_value }: TCellContentProps) => (
             <ProfitLossCell value={cell_value}>
                 <Money has_sign amount={cell_value.replace(/[,]+/g, '')} currency={currency} />
             </ProfitLossCell>
         ),
     },
 ];
-export const getOpenPositionsColumnsTemplate = currency => [
+export const getOpenPositionsColumnsTemplate = (currency: string): TColumnTemplateType[] => [
     {
         title: isMobile() ? '' : localize('Type'),
         col_index: 'type',
-        renderCellContent: ({ cell_value, row_obj, is_footer }) => {
+        renderCellContent: ({ cell_value, row_obj, is_footer }: TCellContentProps) => {
             if (is_footer) return localize('Total');
 
             return <MarketSymbolIconRow action={cell_value} key={row_obj.id} payload={row_obj.contract_info} />;
@@ -180,25 +217,25 @@ export const getOpenPositionsColumnsTemplate = currency => [
     {
         title: localize('Currency'),
         col_index: 'currency',
-        renderCellContent: ({ row_obj }) => (
+        renderCellContent: ({ row_obj }: TCellContentProps) => (
             <CurrencyWrapper currency={getCurrencyDisplayCode(row_obj.contract_info?.currency)} />
         ),
     },
     {
         title: localize('Buy price'),
         col_index: 'purchase',
-        renderCellContent: ({ cell_value }) => <Money amount={cell_value} currency={currency} />,
+        renderCellContent: ({ cell_value }: TCellContentProps) => <Money amount={cell_value} currency={currency} />,
     },
     {
         title: localize('Payout limit'),
         col_index: 'payout',
-        renderCellContent: ({ cell_value }) =>
+        renderCellContent: ({ cell_value }: TCellContentProps) =>
             cell_value ? <Money amount={cell_value} currency={currency} /> : <span>-</span>,
     },
     {
         title: localize('Indicative profit/loss'),
         col_index: 'profit',
-        renderCellContent: ({ row_obj }) => {
+        renderCellContent: ({ row_obj }: TCellContentProps) => {
             if (!row_obj.profit_loss && (!row_obj.contract_info || !row_obj.contract_info.profit)) return;
             const profit = row_obj.profit_loss || row_obj.contract_info.profit;
             // eslint-disable-next-line consistent-return
@@ -220,7 +257,7 @@ export const getOpenPositionsColumnsTemplate = currency => [
     {
         title: localize('Indicative price'),
         col_index: 'indicative',
-        renderCellContent: ({ cell_value, row_obj, is_footer }) => (
+        renderCellContent: ({ cell_value, row_obj, is_footer }: TCellContentProps) => (
             <IndicativeCell
                 amount={+cell_value}
                 currency={currency}
@@ -233,7 +270,9 @@ export const getOpenPositionsColumnsTemplate = currency => [
     {
         title: localize('Remaining time'),
         col_index: 'id',
-        renderCellContent: ({ row_obj }) => <ProgressSliderStream contract_info={row_obj.contract_info} />,
+        renderCellContent: ({ row_obj }: TCellContentProps) => (
+            <ProgressSliderStream contract_info={row_obj.contract_info} />
+        ),
     },
 ];
 
@@ -243,11 +282,11 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
     onClickSell,
     getPositionById,
     server_time,
-}) => [
+}: TMultiplierOpenPositionstemplateProps): TColumnTemplateType[] => [
     {
         title: isMobile() ? '' : localize('Type'),
         col_index: 'type',
-        renderCellContent: ({ cell_value, row_obj, is_footer }) => {
+        renderCellContent: ({ cell_value, row_obj, is_footer }: TCellContentProps) => {
             if (is_footer) return localize('Total');
 
             return (
@@ -263,20 +302,20 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
     {
         title: localize('Multiplier'),
         col_index: 'multiplier',
-        renderCellContent: ({ row_obj }) =>
+        renderCellContent: ({ row_obj }: TCellContentProps) =>
             row_obj.contract_info && row_obj.contract_info.multiplier ? `x${row_obj.contract_info.multiplier}` : '',
     },
     {
         title: localize('Currency'),
         col_index: 'currency',
-        renderCellContent: ({ row_obj }) => (
+        renderCellContent: ({ row_obj }: TCellContentProps) => (
             <CurrencyWrapper currency={getCurrencyDisplayCode(row_obj.contract_info?.currency)} />
         ),
     },
     {
         title: localize('Stake'),
         col_index: 'buy_price',
-        renderCellContent: ({ row_obj }) => {
+        renderCellContent: ({ row_obj }: TCellContentProps) => {
             if (row_obj.contract_info) {
                 const { ask_price: cancellation_price = 0 } = row_obj.contract_info.cancellation || {};
                 return <Money amount={row_obj.contract_info.buy_price - cancellation_price} currency={currency} />;
@@ -287,7 +326,7 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
     {
         title: localize('Deal cancel. fee'),
         col_index: 'cancellation',
-        renderCellContent: ({ row_obj }) => {
+        renderCellContent: ({ row_obj }: TCellContentProps) => {
             if (!row_obj.contract_info || !row_obj.contract_info.underlying) return '-';
 
             if (!shouldShowCancellation(row_obj.contract_info.underlying)) return localize('N/A');
@@ -305,12 +344,12 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
             <Localize i18n_default_text='Buy price' />
         ),
         col_index: 'purchase',
-        renderCellContent: ({ cell_value }) => <Money amount={cell_value} currency={currency} />,
+        renderCellContent: ({ cell_value }: TCellContentProps) => <Money amount={cell_value} currency={currency} />,
     },
     {
         title: <Localize i18n_default_text='Take profit<0 />Stop loss' components={[<br key={0} />]} />,
         col_index: 'limit_order',
-        renderCellContent: ({ row_obj, is_footer }) => {
+        renderCellContent: ({ row_obj, is_footer }: TCellContentProps) => {
             if (is_footer) {
                 return '';
             }
@@ -339,7 +378,7 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
     {
         title: localize('Current stake'),
         col_index: 'bid_price',
-        renderCellContent: ({ row_obj, is_footer }) => {
+        renderCellContent: ({ row_obj, is_footer }: TCellContentProps) => {
             if (is_footer) {
                 return '';
             }
@@ -366,7 +405,7 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
             <Localize i18n_default_text='Total<0 />profit/loss' components={[<br key={0} />]} />
         ),
         col_index: 'profit',
-        renderCellContent: ({ row_obj }) => {
+        renderCellContent: ({ row_obj }: TCellContentProps) => {
             if (!row_obj.contract_info || !row_obj.contract_info.profit) return null;
             const total_profit = getTotalProfit(row_obj.contract_info);
             // eslint-disable-next-line consistent-return
@@ -388,7 +427,7 @@ export const getMultiplierOpenPositionsColumnsTemplate = ({
     {
         title: localize('Action'),
         col_index: 'action',
-        renderCellContent: ({ row_obj, is_footer }) => {
+        renderCellContent: ({ row_obj, is_footer }: TCellContentProps) => {
             if (is_footer) {
                 return <div className='open-positions__row-action' />;
             }
