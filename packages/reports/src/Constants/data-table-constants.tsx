@@ -11,37 +11,26 @@ import IndicativeCell from '../Components/indicative-cell.jsx';
 import MarketSymbolIconRow from '../Components/market-symbol-icon-row.jsx';
 import ProfitLossCell from '../Components/profit_loss_cell.jsx';
 import CurrencyWrapper from '../Components/currency-wrapper';
+import { ITransformer } from 'mobx-utils';
 
-type TActionType =
-    | 'buy'
-    | 'deposit'
-    | 'hold'
-    | 'release'
-    | 'sell'
-    | 'withdrawal'
-    | 'default'
-    | 'adjustment'
-    | 'transfer';
-type TModeType = 'success' | 'warn' | 'danger' | 'info' | 'default' | 'adjustment' | 'transfer';
+const map = {
+    buy: 'success',
+    deposit: 'success',
+    hold: 'warn',
+    release: 'success',
+    sell: 'danger',
+    withdrawal: 'info',
+    default: 'default',
+    adjustment: 'adjustment',
+    transfer: 'transfer',
+} as const;
 
-const getModeFromValue = (key: TActionType): string => {
-    const map = {
-        buy: 'success',
-        deposit: 'success',
-        hold: 'warn',
-        release: 'success',
-        sell: 'danger',
-        withdrawal: 'info',
-        default: 'default',
-        adjustment: 'adjustment',
-        transfer: 'transfer',
-    };
+type TKeys = keyof typeof map;
 
-    return map[key] || map.default;
-};
+const getModeFromValue = (key: TKeys) => map[key] || map.default;
 
 type TCellContentProps = {
-    cell_value: string;
+    cell_value: TKeys;
     passthrough: any;
     row_obj: any;
     is_footer: boolean;
@@ -63,8 +52,8 @@ type TMultiplierOpenPositionstemplateProps = {
     currency: string;
     onClickCancel: () => void;
     onClickSell: () => void;
-    getPositionById: (id: string) => any;
-    server_time: object;
+    getPositionById: (id: string) => ITransformer<any, any>;
+    server_time: moment.Moment;
 };
 
 /* eslint-disable react/display-name, react/prop-types */
@@ -111,7 +100,7 @@ export const getStatementTableColumnsTemplate = (currency: string): TColumnTempl
         title: localize('Transaction'),
         col_index: 'action_type',
         renderCellContent: ({ cell_value, passthrough, row_obj }: TCellContentProps) => (
-            <Label mode={getModeFromValue(cell_value as TActionType) as TModeType}>
+            <Label mode={getModeFromValue(cell_value)}>
                 {(passthrough.isTopUp(row_obj) && localize('Top up')) || row_obj.action}
             </Label>
         ),
