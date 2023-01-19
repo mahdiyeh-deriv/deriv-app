@@ -31,6 +31,7 @@ const ProgressSliderStream = ({ contract_info, is_loading, server_time }: TProgr
     );
 };
 
+// TODO: implement reports store TRootStore in types.ts
 export default connect(({ common, portfolio }: any) => ({
     is_loading: portfolio.is_loading,
     server_time: common.server_time,
