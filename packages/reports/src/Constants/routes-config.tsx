@@ -6,12 +6,24 @@ import { localize } from '@deriv/translations';
 const Page404 = React.lazy(() => import(/* webpackChunkName: "404" */ 'Modules/Page404'));
 
 const lazyLoadReportComponent = makeLazyLoader(
-    () => moduleLoader(() => import(/* webpackChunkName: "reports-routes" */ 'Containers')),
+    () => moduleLoader(() => import(/* webpackChunkName: "reports-routes" */ '../Containers')),
     () => <Loading />
 );
 
+type TRoute = {
+    path?: string;
+    component: React.ComponentType;
+    is_authenticated?: boolean;
+    getTitle: () => string;
+    icon_component?: string;
+    routes?: TRoute[];
+    default?: boolean;
+    is_appstore?: boolean;
+    is_pre_appstore?: boolean;
+};
+
 // Order matters
-const initRoutesConfig = () => {
+const initRoutesConfig = (): TRoute[] => {
     return [
         {
             path: routes.reports,
@@ -44,14 +56,14 @@ const initRoutesConfig = () => {
     ];
 };
 
-let routesConfig;
+let routesConfig: TRoute[];
 
 // For default page route if page/path is not found, must be kept at the end of routes_config array
-const route_default = { component: Page404, getTitle: () => localize('Error 404') };
+const route_default: TRoute = { component: Page404, getTitle: () => localize('Error 404') };
 
-const getRoutesConfig = ({ is_appstore, is_pre_appstore }) => {
+const getRoutesConfig = (): TRoute[] => {
     if (!routesConfig) {
-        routesConfig = initRoutesConfig({ is_appstore, is_pre_appstore });
+        routesConfig = initRoutesConfig();
         routesConfig.push(route_default);
     }
     return routesConfig;
