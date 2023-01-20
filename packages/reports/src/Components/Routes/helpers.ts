@@ -2,17 +2,19 @@ import { match, matchPath, RouteProps } from 'react-router';
 
 type TRoute = {
     path?: string;
-    component?: any;
-    is_authenticated?: true;
-    getTitle?: () => string;
+    component: React.ComponentType;
+    is_authenticated?: boolean;
+    getTitle: () => string;
     icon_component?: string;
+    routes?: TRoute[];
     default?: boolean;
+    is_appstore?: boolean;
+    is_pre_appstore?: boolean;
 };
 
 type TRouteConfig = TRoute & {
     is_modal?: boolean;
     is_authenticated?: boolean;
-    routes?: TRoute[];
 };
 
 export const normalizePath = (path: string) => (/^\//.test(path) ? path : `/${path || ''}`); // Default to '/'

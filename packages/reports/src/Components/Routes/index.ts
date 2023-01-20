@@ -1,4 +1,4 @@
-import BinaryLink from './binary-link.jsx';
+import BinaryLink from './binary-link';
 import RouteWithSubRoutes from './route-with-sub-routes.jsx';
 import BinaryRoutes from './binary-routes';
 
