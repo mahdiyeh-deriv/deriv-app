@@ -1,8 +1,8 @@
 import * as Helpers from '../helpers';
 import { routes } from '@deriv/shared';
-import getRouteConfig from 'Constants/routes-config';
+import getRoutesConfig from 'Constants/routes-config';
 
-const routeConfig = getRouteConfig({ is_appstore: false, is_pre_appstore: false });
+const routeConfig = getRoutesConfig({ is_appstore: false, is_pre_appstore: false });
 
 describe('Helpers', () => {
     describe('findRouteByPath', () => {
