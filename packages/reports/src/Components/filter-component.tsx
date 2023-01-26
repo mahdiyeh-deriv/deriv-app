@@ -3,6 +3,7 @@ import { FilterDropdown } from '@deriv/components';
 import { localize } from '@deriv/translations';
 import { connect } from 'Stores/connect';
 import CompositeCalendar from './Form/CompositeCalendar';
+import { TRootStore } from '../../../stores/types';
 
 type TFilterComponent = {
     action_type: string;
@@ -67,7 +68,7 @@ const FilterComponent = ({
     );
 };
 
-export default connect(({ modules }: any) => ({
+export default connect(({ modules }: TRootStore) => ({
     action_type: modules.statement.action_type,
     data: modules.statement.data,
     date_from: modules.statement.date_from,
