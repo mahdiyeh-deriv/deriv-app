@@ -31,7 +31,7 @@ import {
     getOpenPositionsColumnsTemplate,
     getMultiplierOpenPositionsColumnsTemplate,
 } from 'Constants/data-table-constants';
-import PlaceholderComponent from '../Components/placeholder-component.jsx';
+import PlaceholderComponent from '../Components/placeholder-component';
 import { getCardLabels } from '_common/contract';
 import { connect } from 'Stores/connect';
 

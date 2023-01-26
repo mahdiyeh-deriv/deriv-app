@@ -1,8 +1,17 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import Loading from '_common/components/loading';
 
-const PlaceholderComponent = props => {
+type TPlaceholderComponent = {
+    component_icon: string;
+    empty_message_component: React.ElementType;
+    has_selected_date: boolean;
+    is_empty: boolean;
+    is_loading: boolean;
+    localized_message: string;
+    localized_period_message: string;
+};
+
+const PlaceholderComponent = (props: React.PropsWithChildren<TPlaceholderComponent>) => {
     const EmptyMessageComponent = props.empty_message_component;
     return (
         <React.Fragment>
@@ -17,16 +26,6 @@ const PlaceholderComponent = props => {
             {props.is_loading && <Loading />}
         </React.Fragment>
     );
-};
-
-PlaceholderComponent.propTypes = {
-    component_icon: PropTypes.string,
-    empty_message_component: PropTypes.func,
-    has_selected_date: PropTypes.bool,
-    is_empty: PropTypes.bool,
-    is_loading: PropTypes.bool,
-    localized_message: PropTypes.string,
-    localized_period_message: PropTypes.string,
 };
 
 export default PlaceholderComponent;
