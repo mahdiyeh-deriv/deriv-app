@@ -1,2 +1,1 @@
-export const getProfitOrLoss = (value: string): 'profit' | 'loss' =>
-    +value.replace(/,/g, '') >= 0 ? 'profit' : 'loss';
+export const getProfitOrLoss = (value: string) => (+value.replace(/,/g, '') >= 0 ? 'profit' : 'loss');

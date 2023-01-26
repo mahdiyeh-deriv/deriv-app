@@ -36,10 +36,10 @@ export const getMarketInformation = (shortcode: string): TMarketInfo => {
     return market_info;
 };
 
-export const getMarketName = (underlying: string | null) =>
+export const getMarketName = (underlying: string) =>
     underlying ? getMarketNamesMap()[underlying.toUpperCase() as keyof typeof getMarketNamesMap] : null;
 
-export const getTradeTypeName = (category: string | null) =>
+export const getTradeTypeName = (category: string) =>
     category
         ? (getContractConfig()[category.toUpperCase() as keyof typeof getContractConfig] as TTradeConfig).name
         : null;
