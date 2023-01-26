@@ -11,19 +11,27 @@ type TPlaceholderComponent = {
     localized_period_message: string;
 };
 
-const PlaceholderComponent = (props: React.PropsWithChildren<TPlaceholderComponent>) => {
-    const EmptyMessageComponent = props.empty_message_component;
+const PlaceholderComponent = ({
+    component_icon,
+    empty_message_component,
+    has_selected_date,
+    is_empty,
+    is_loading,
+    localized_message,
+    localized_period_message,
+}: TPlaceholderComponent) => {
+    const EmptyMessageComponent = empty_message_component;
     return (
         <React.Fragment>
-            {props.is_empty && (
+            {is_empty && (
                 <EmptyMessageComponent
-                    component_icon={props.component_icon}
-                    has_selected_date={props.has_selected_date}
-                    localized_message={props.localized_message}
-                    localized_period_message={props.localized_period_message}
+                    component_icon={component_icon}
+                    has_selected_date={has_selected_date}
+                    localized_message={localized_message}
+                    localized_period_message={localized_period_message}
                 />
             )}
-            {props.is_loading && <Loading />}
+            {is_loading && <Loading />}
         </React.Fragment>
     );
 };
