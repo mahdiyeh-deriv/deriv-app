@@ -4,7 +4,6 @@ import { Icon, Popover, IconTradeTypes } from '@deriv/components';
 import { getMarketName, getTradeTypeName } from '../Helpers/market-underlying';
 
 type TMarketSymbolIconRow = {
-    action: string;
     icon: string;
     payload: {
         shortcode: string;
