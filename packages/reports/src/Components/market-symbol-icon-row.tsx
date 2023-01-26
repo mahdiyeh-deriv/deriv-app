@@ -64,7 +64,6 @@ const MarketSymbolIconRow = ({
                                     : info_from_shortcode.category.toLowerCase()
                             }
                             color='brand'
-                            className=''
                         />
                     </Popover>
                     {show_description && info_from_shortcode.category}
