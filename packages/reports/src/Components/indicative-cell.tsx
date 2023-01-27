@@ -10,7 +10,7 @@ type TIndicativeCell = {
     currency: string;
     status: string;
     is_footer: boolean;
-    is_sell_requested: () => boolean;
+    is_sell_requested: boolean;
     onClickSell: () => void;
 };
 
