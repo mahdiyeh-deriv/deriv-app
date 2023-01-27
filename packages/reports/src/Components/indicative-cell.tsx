@@ -22,7 +22,7 @@ const IndicativeCell = ({
     onClickSell,
     is_sell_requested,
 }: TIndicativeCell) => {
-    const [movement, setMovement] = React.useState(null);
+    const [movement, setMovement] = React.useState<string | null>(null);
     const [amount_state, setAmountState] = React.useState(0);
 
     React.useEffect(() => {
