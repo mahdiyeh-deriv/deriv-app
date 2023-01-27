@@ -1,10 +1,27 @@
-import PropTypes from 'prop-types';
 import React from 'react';
 import { Icon, Money, DesktopWrapper, ContractCard } from '@deriv/components';
 import { getCardLabels } from '_common/contract';
 import { connect } from 'Stores/connect';
+import { TRootStore } from 'Stores/index';
 
-const IndicativeCell = ({ amount, currency, contract_info, is_footer, onClickSell, is_sell_requested }) => {
+type TIndicativeCell = {
+    amount: number;
+    contract_info: object;
+    currency: string;
+    status: string;
+    is_footer: boolean;
+    is_sell_requested: () => void;
+    onClickSell: () => void;
+};
+
+const IndicativeCell = ({
+    amount,
+    currency,
+    contract_info,
+    is_footer,
+    onClickSell,
+    is_sell_requested,
+}: TIndicativeCell) => {
     const [movement, setMovement] = React.useState(null);
     const [amount_state, setAmountState] = React.useState(0);
 
@@ -40,16 +57,6 @@ const IndicativeCell = ({ amount, currency, contract_info, is_footer, onClickSel
     );
 };
 
-IndicativeCell.propTypes = {
-    amount: PropTypes.number,
-    contract_info: PropTypes.object,
-    currency: PropTypes.string,
-    status: PropTypes.string,
-    is_footer: PropTypes.bool,
-    is_sell_requested: PropTypes.func,
-    onClickSell: PropTypes.func,
-};
-
-export default connect(({ portfolio }) => ({
+export default connect(({ portfolio }: TRootStore) => ({
     onClickSell: portfolio.onClickSell,
 }))(IndicativeCell);
