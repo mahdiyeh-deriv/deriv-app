@@ -2,20 +2,20 @@ import * as Helpers from '../helpers';
 import { routes } from '@deriv/shared';
 import getRoutesConfig from 'Constants/routes-config';
 
-const routeConfig = getRoutesConfig({ is_appstore: false, is_pre_appstore: false });
+const routesConfig = getRoutesConfig();
 
 describe('Helpers', () => {
     describe('findRouteByPath', () => {
         it('should return undefined when path is not in routes_config', () => {
-            expect(Helpers.findRouteByPath('invalidRoute', routeConfig)).toBeUndefined();
+            expect(Helpers.findRouteByPath('invalidRoute', routesConfig)).toBeUndefined();
         });
         it('should return route_info when path is in routes_config and is not nested', () => {
-            const result = Helpers.findRouteByPath(routes.reports, routeConfig);
-            expect(result.path).toBe(routes.reports);
+            const result = Helpers.findRouteByPath(routes.reports, routesConfig);
+            expect(result?.path).toBe(routes.reports);
         });
         it('should return route_info of parent route when path is in routes_config child level and is nested', () => {
-            const reports_routes_length = routeConfig.find(r => r.path === routes.reports).routes.length;
-            expect(Object.keys(Helpers.findRouteByPath(routes.profit, routeConfig))).toEqual(
+            const reports_routes_length = routesConfig.find(r => r.path === routes.reports)?.routes?.length;
+            expect(Object.keys(Helpers.findRouteByPath(routes.profit, routesConfig) || {})).toEqual(
                 expect.arrayContaining([
                     'path',
                     'component',
@@ -25,10 +25,10 @@ describe('Helpers', () => {
                     'getTitle',
                 ])
             );
-            expect(Helpers.findRouteByPath(routes.profit, routeConfig).routes).toBeInstanceOf(Array);
-            expect(Helpers.findRouteByPath(routes.profit, routeConfig).routes).toHaveLength(reports_routes_length);
-            expect(Helpers.findRouteByPath(routes.profit, routeConfig).is_authenticated).toBe(true);
-            expect(Helpers.findRouteByPath(routes.profit, routeConfig).path).toBe(routes.reports);
+            expect(Helpers.findRouteByPath(routes.profit, routesConfig)?.routes).toBeInstanceOf(Array);
+            expect(Helpers.findRouteByPath(routes.profit, routesConfig)?.routes).toHaveLength(reports_routes_length);
+            expect(Helpers.findRouteByPath(routes.profit, routesConfig)?.is_authenticated).toBe(true);
+            expect(Helpers.findRouteByPath(routes.profit, routesConfig)?.path).toBe(routes.reports);
         });
     });
 
