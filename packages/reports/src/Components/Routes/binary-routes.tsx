@@ -3,23 +3,7 @@ import { Switch } from 'react-router-dom';
 import { Localize } from '@deriv/translations';
 import getRoutesConfig from '../../Constants/routes-config';
 import RouteWithSubRoutes from './route-with-sub-routes';
-
-type TBinaryRoutes = {
-    is_logged_in: boolean;
-    is_logging_in: boolean;
-};
-
-type TRoute = {
-    path?: string;
-    component: React.ComponentType;
-    is_authenticated?: boolean;
-    getTitle: () => string;
-    icon_component?: string;
-    routes?: TRoute[];
-    default?: boolean;
-    is_appstore?: boolean;
-    is_pre_appstore?: boolean;
-};
+import { TBinaryRoutes } from '../../Types';
 
 const BinaryRoutes = (props: TBinaryRoutes) => {
     return (
@@ -31,8 +15,8 @@ const BinaryRoutes = (props: TBinaryRoutes) => {
             }
         >
             <Switch>
-                {getRoutesConfig().map((route: TRoute) => (
-                    <RouteWithSubRoutes key={route.path} {...route} {...props} />
+                {getRoutesConfig().map((route, idx) => (
+                    <RouteWithSubRoutes key={route.path ?? idx} {...route} {...props} />
                 ))}
             </Switch>
         </React.Suspense>
