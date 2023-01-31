@@ -9,7 +9,12 @@ type TFilterComponent = {
     action_type: string;
     date_from: number;
     date_to: number;
-    filtered_date_range: object;
+    filtered_date_range: {
+        duration: number;
+        label: string;
+        onClick?: () => void;
+        value?: string;
+    };
     handleDateChange: () => void;
     handleFilterChange: () => void;
     suffix_icon: string;
