@@ -3,11 +3,11 @@ import Routes from 'Containers/routes.jsx';
 import { MobxContentProvider } from 'Stores/connect';
 import 'Sass/app.scss';
 import initStore from './init-store'; // eslint-disable-line import/extensions
-import RootStore from './Stores/index';
+import type { TRootStore } from 'Stores/index';
 
 type TAppProps = {
     passthrough: {
-        root_store: RootStore;
+        root_store: TRootStore;
         WS: Record<string, any>;
     };
 };
