@@ -5,8 +5,8 @@ import { localize } from '@deriv/translations';
 import { daysFromTodayTo, epochToMoment, toMoment } from '@deriv/shared';
 import { connect } from 'Stores/connect';
 import RootStore from 'Stores/index';
-import CompositeCalendarMobile from './composite-calendar-mobile.jsx';
-import SideList from './side-list.jsx';
+import CompositeCalendarMobile from './composite-calendar-mobile';
+import SideList from './side-list';
 import CalendarIcon from './calendar-icon';
 import TwoMonthPicker from './two-month-picker';
 
