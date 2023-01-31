@@ -1,16 +1,15 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { PlatformContext } from '@deriv/shared';
 import getRoutesConfig from 'Constants/routes-config';
 import { findRouteByPath, normalizePath } from './helpers';
 
-type TBinaryLink = {
-    active_class: string;
-    to: string;
-};
+const BinaryLink = ({ active_class, to, children, ...props }) => {
+    const { is_appstore } = React.useContext(PlatformContext);
 
-const BinaryLink = ({ active_class, to, children, ...props }: React.PropsWithChildren<Partial<TBinaryLink>>) => {
-    const path = normalizePath(to as string);
-    const route = findRouteByPath(path, getRoutesConfig());
+    const path = normalizePath(to);
+    const route = findRouteByPath(path, getRoutesConfig({ is_appstore }));
 
     if (!route) {
         throw new Error(`Route not found: ${to}`);
@@ -23,6 +22,12 @@ const BinaryLink = ({ active_class, to, children, ...props }: React.PropsWithChi
     ) : (
         <a {...props}>{children}</a>
     );
+};
+
+BinaryLink.propTypes = {
+    active_class: PropTypes.string,
+    children: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.string]),
+    to: PropTypes.string,
 };
 
 export default BinaryLink;

@@ -1,3 +1,3 @@
-import CompositeCalendar from './composite-calendar';
+import CalendarIcon from './calendar-icon';
 
-export default CompositeCalendar;
+export default CalendarIcon;
