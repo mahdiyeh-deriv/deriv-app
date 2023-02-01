@@ -11,9 +11,9 @@ import CompositeCalendar from '../Components/Form/CompositeCalendar';
 import { getSupportedContracts } from '_common/contract';
 
 import { connect } from 'Stores/connect';
-import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message.jsx';
-import PlaceholderComponent from '../Components/placeholder-component.jsx';
-import { ReportsMeta } from '../Components/reports-meta.jsx';
+import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message';
+import PlaceholderComponent from '../Components/placeholder-component';
+import { ReportsMeta } from '../Components/reports-meta';
 import { getProfitTableColumnsTemplate } from 'Constants/data-table-constants';
 
 const getRowAction = row_obj =>
