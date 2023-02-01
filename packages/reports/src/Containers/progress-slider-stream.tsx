@@ -5,6 +5,7 @@ import { connect } from 'Stores/connect';
 import { getCardLabels } from '_common/contract';
 import moment from 'moment';
 import { TContractInfo } from '@deriv/shared/src/utils/contract/contract-types';
+import { TRootStore } from 'Stores/index';
 
 type TProgressSliderStream = {
     contract_info: Required<TContractInfo>;
@@ -31,8 +32,7 @@ const ProgressSliderStream = ({ contract_info, is_loading, server_time }: TProgr
     );
 };
 
-// TODO: implement reports store TRootStore in types.ts
-export default connect(({ common, portfolio }: any) => ({
+export default connect(({ common, portfolio }: TRootStore) => ({
     is_loading: portfolio.is_loading,
     server_time: common.server_time,
 }))(ProgressSliderStream);
