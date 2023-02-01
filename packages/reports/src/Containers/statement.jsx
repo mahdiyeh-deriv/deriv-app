@@ -9,11 +9,11 @@ import { ReportsTableRowLoader } from '../Components/Elements/ContentLoader';
 import { getSupportedContracts } from '_common/contract';
 import { connect } from 'Stores/connect';
 import { getStatementTableColumnsTemplate } from '../Constants/data-table-constants';
-import PlaceholderComponent from '../Components/placeholder-component.jsx';
-import AccountStatistics from '../Components/account-statistics.jsx';
-import FilterComponent from '../Components/filter-component.jsx';
-import { ReportsMeta } from '../Components/reports-meta.jsx';
-import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message.jsx';
+import PlaceholderComponent from '../Components/placeholder-component';
+import AccountStatistics from '../Components/account-statistics';
+import FilterComponent from '../Components/filter-component';
+import { ReportsMeta } from '../Components/reports-meta';
+import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message';
 
 const DetailsComponent = ({ message = '', action_type = '' }) => {
     const address_hash_match = /:\s([0-9a-zA-Z]+.{25,28})/gm.exec(message.split(/,\s/)[0]);
