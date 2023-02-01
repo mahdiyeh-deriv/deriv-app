@@ -9,6 +9,7 @@ import CompositeCalendarMobile from './composite-calendar-mobile';
 import SideList from './side-list';
 import CalendarIcon from './calendar-icon';
 import TwoMonthPicker from './two-month-picker';
+import moment from 'moment';
 
 type TCompositeCalendarProps = {
     current_focus: string;
@@ -20,7 +21,7 @@ type TCompositeCalendarProps = {
 
 type TTwoMonthPickerLoadableProps = {
     onChange: (date: moment.Moment) => void;
-    isPeriodDisabled: (date: moment.Moment | number) => boolean;
+    isPeriodDisabled: (date: moment.Moment) => boolean;
     value: number;
 };
 
@@ -82,19 +83,19 @@ const CompositeCalendar: React.FC<TCompositeCalendarProps> = props => {
     const selectDateRange = (new_from?: number) => {
         hideCalendar();
         applyBatch({
-            from: new_from ? toMoment().startOf('day').subtract(new_from, 'day').add(1, 's').unix() : null,
-            to: toMoment().endOf('day').unix(),
+            from: new_from ? toMoment().startOf('day').subtract(new_from, 'day').add(1, 's') : null,
+            to: toMoment().endOf('day'),
             is_batch: true,
         });
     };
 
     const getToDateLabel = () => {
-        const date = epochToMoment(to);
+        const date = toMoment(to);
         return daysFromTodayTo(date) === 0 ? localize('Today') : date.format('MMM, DD YYYY');
     };
 
     const getFromDateLabel = () => {
-        const date = epochToMoment(from);
+        const date = toMoment(from);
         return from ? date.format('MMM, DD YYYY') : '';
     };
 
@@ -113,12 +114,7 @@ const CompositeCalendar: React.FC<TCompositeCalendarProps> = props => {
     };
 
     const setToDate = (date: moment.Moment) => {
-        updateState(
-            'to',
-            epochToMoment(date as unknown as number)
-                .endOf('day')
-                .unix()
-        );
+        updateState('to', toMoment(date as unknown as number).endOf('day'));
     };
 
     const setFromDate = (date: moment.Moment) => {
@@ -141,12 +137,12 @@ const CompositeCalendar: React.FC<TCompositeCalendarProps> = props => {
         });
     };
 
-    const isPeriodDisabledTo = (date: number) => {
-        return date + 1 <= from || date > toMoment().endOf('day').unix();
+    const isPeriodDisabledTo = (date: moment.Moment) => {
+        return date.clone().add(1, 'days').isSameOrBefore(from) || date.isAfter(toMoment().endOf('day'));
     };
 
-    const isPeriodDisabledFrom = (date: number) => {
-        return date - 1 >= to;
+    const isPeriodDisabledFrom = (date: moment.Moment) => {
+        return moment(date).subtract(1, 'days').isSameOrAfter(to);
     };
 
     return (
