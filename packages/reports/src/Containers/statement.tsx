@@ -1,5 +1,3 @@
-import { PropTypes as MobxPropTypes } from 'mobx-react';
-import PropTypes from 'prop-types';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { DesktopWrapper, MobileWrapper, DataList, DataTable, Text, Clipboard } from '@deriv/components';
@@ -14,6 +12,53 @@ import AccountStatistics from '../Components/account-statistics';
 import FilterComponent from '../Components/filter-component';
 import { ReportsMeta } from '../Components/reports-meta';
 import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message';
+import { TPassthrough } from '../Types';
+import { TRootStore } from 'Stores/index';
+
+type TData = {
+    action: string;
+    action_type: string;
+    amount: string;
+    app_id: number;
+    balance: string;
+    date: string;
+    desc: string;
+    display_name: string;
+    id: number;
+    payout: string;
+    purchase_time: number;
+    refid: number;
+    shortcode: string;
+    transaction_time: number;
+};
+
+type TMobileRenderer = {
+    row: TData;
+    passthrough: TPassthrough;
+};
+
+type TStatements = {
+    action_type: string;
+    account_statistics: object;
+    component_icon: string;
+    currency: string;
+    data: Array<TData>;
+    date_from: number;
+    date_to: number;
+    error: string;
+    filtered_date_range: object;
+    handleDateChange: () => void;
+    handleFilterChange: () => void;
+    handleScroll: () => void;
+    has_selected_date: boolean;
+    is_empty: boolean;
+    is_loading: boolean;
+    is_mx_mlt: boolean;
+    is_switching: boolean;
+    is_virtual: boolean;
+    onMount: () => void;
+    onUnmount: () => void;
+};
 
 const DetailsComponent = ({ message = '', action_type = '' }) => {
     const address_hash_match = /:\s([0-9a-zA-Z]+.{25,28})/gm.exec(message.split(/,\s/)[0]);
@@ -53,7 +98,7 @@ const DetailsComponent = ({ message = '', action_type = '' }) => {
 };
 
 const getRowAction = row_obj => {
-    let action;
+    let action: any;
     if (row_obj.id && ['buy', 'sell'].includes(row_obj.action_type)) {
         action =
             getSupportedContracts()[extractInfoFromShortcode(row_obj.shortcode).category.toUpperCase()] &&
@@ -122,7 +167,7 @@ const Statement = ({
     is_virtual,
     onMount,
     onUnmount,
-}) => {
+}: TStatements) => {
     React.useEffect(() => {
         onMount();
         return () => {
@@ -136,28 +181,31 @@ const Statement = ({
     const columns = getStatementTableColumnsTemplate(currency);
     const columns_map = columns.reduce((map, item) => {
         map[item.col_index] = item;
+        // console.log('map', map);
         return map;
     }, {});
 
-    const mobileRowRenderer = ({ row, passthrough }) => (
-        <React.Fragment>
-            <div className='data-list__row'>
-                <DataList.Cell row={row} column={columns_map.icon} passthrough={passthrough} />
-                <DataList.Cell row={row} column={columns_map.action_type} passthrough={passthrough} />
-            </div>
-            <div className='data-list__row'>
-                <DataList.Cell row={row} column={columns_map.refid} />
-                <DataList.Cell className='data-list__row-cell--amount' row={row} column={columns_map.currency} />
-            </div>
-            <div className='data-list__row'>
-                <DataList.Cell row={row} column={columns_map.date} />
-                <DataList.Cell className='data-list__row-cell--amount' row={row} column={columns_map.amount} />
-            </div>
-            <div className='data-list__row'>
-                <DataList.Cell row={row} column={columns_map.balance} />
-            </div>
-        </React.Fragment>
-    );
+    const mobileRowRenderer = ({ row, passthrough }: TMobileRenderer) => {
+        return (
+            <React.Fragment>
+                <div className='data-list__row'>
+                    <DataList.Cell row={row} column={columns_map.icon} passthrough={passthrough} />
+                    <DataList.Cell row={row} column={columns_map.action_type} passthrough={passthrough} />
+                </div>
+                <div className='data-list__row'>
+                    <DataList.Cell row={row} column={columns_map.refid} />
+                    <DataList.Cell className='data-list__row-cell--amount' row={row} column={columns_map.currency} />
+                </div>
+                <div className='data-list__row'>
+                    <DataList.Cell row={row} column={columns_map.date} />
+                    <DataList.Cell className='data-list__row-cell--amount' row={row} column={columns_map.amount} />
+                </div>
+                <div className='data-list__row'>
+                    <DataList.Cell row={row} column={columns_map.balance} />
+                </div>
+            </React.Fragment>
+        );
+    };
 
     return (
         <React.Fragment>
@@ -235,30 +283,7 @@ const Statement = ({
     );
 };
 
-Statement.propTypes = {
-    action_type: PropTypes.string,
-    account_statistics: PropTypes.object,
-    component_icon: PropTypes.string,
-    currency: PropTypes.string,
-    data: MobxPropTypes.arrayOrObservableArray,
-    date_from: PropTypes.number,
-    date_to: PropTypes.number,
-    error: PropTypes.string,
-    filtered_date_range: PropTypes.object,
-    handleDateChange: PropTypes.func,
-    handleFilterChange: PropTypes.func,
-    handleScroll: PropTypes.func,
-    has_selected_date: PropTypes.bool,
-    is_empty: PropTypes.bool,
-    is_loading: PropTypes.bool,
-    is_mx_mlt: PropTypes.bool,
-    is_switching: PropTypes.bool,
-    is_virtual: PropTypes.bool,
-    onMount: PropTypes.func,
-    onUnmount: PropTypes.func,
-};
-
-export default connect(({ modules, client }) => ({
+export default connect(({ modules, client }: TRootStore) => ({
     action_type: modules.statement.action_type,
     account_statistics: modules.statement.account_statistics,
     currency: client.currency,
