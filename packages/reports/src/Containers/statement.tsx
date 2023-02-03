@@ -14,35 +14,24 @@ import { ReportsMeta } from '../Components/reports-meta';
 import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message';
 import { TPassthrough } from '../Types';
 import { TRootStore } from 'Stores/index';
-
-type TData = {
-    action: string;
-    action_type: string;
-    amount: string;
-    app_id: number;
-    balance: string;
-    date: string;
-    desc: string;
-    display_name: string;
-    id: number;
-    payout: string;
-    purchase_time: number;
-    refid: number;
-    shortcode: string;
-    transaction_time: number;
-};
+import { Statement as TStatement } from '@deriv/api-types';
 
 type TMobileRenderer = {
-    row: TData;
+    row: TStatement;
     passthrough: TPassthrough;
 };
 
-type TStatements = {
+type TAction = {
+    message: string;
+    component?: React.ReactElement;
+};
+
+type TStatementsProps = {
     action_type: string;
     account_statistics: object;
     component_icon: string;
     currency: string;
-    data: Array<TData>;
+    data: Array<TStatement>;
     date_from: number;
     date_to: number;
     error: string;
@@ -97,14 +86,21 @@ const DetailsComponent = ({ message = '', action_type = '' }) => {
     );
 };
 
-const getRowAction = row_obj => {
-    let action: any;
+const getRowAction = (row_obj: TStatement) => {
+    let action: TAction | string = {
+        message: '',
+        component: <></>,
+    };
     if (row_obj.id && ['buy', 'sell'].includes(row_obj.action_type)) {
         action =
-            getSupportedContracts()[extractInfoFromShortcode(row_obj.shortcode).category.toUpperCase()] &&
-            !isForwardStarting(row_obj.shortcode, row_obj.purchase_time || row_obj.transaction_time)
+            getSupportedContracts()[
+                extractInfoFromShortcode(row_obj.shortcode).category.toUpperCase() as keyof ReturnType<
+                    typeof getSupportedContracts
+                >
+            ] && !isForwardStarting(row_obj.shortcode, row_obj.purchase_time || row_obj.transaction_time)
                 ? getContractPath(row_obj.id)
                 : {
+                      message: '',
                       component: (
                           <Localize
                               i18n_default_text='This trade type is currently not supported on {{website_name}}. Please go to <0>Binary.com</0> for details.'
@@ -139,7 +135,7 @@ const getRowAction = row_obj => {
         };
     }
 
-    if (action?.message) {
+    if (typeof action !== 'string' && action?.message) {
         action.component = <DetailsComponent message={action.message} action_type={row_obj.action_type} />;
     }
 
@@ -167,7 +163,7 @@ const Statement = ({
     is_virtual,
     onMount,
     onUnmount,
-}: TStatements) => {
+}: TStatementsProps) => {
     React.useEffect(() => {
         onMount();
         return () => {
@@ -181,7 +177,6 @@ const Statement = ({
     const columns = getStatementTableColumnsTemplate(currency);
     const columns_map = columns.reduce((map, item) => {
         map[item.col_index] = item;
-        // console.log('map', map);
         return map;
     }, {});
 
@@ -254,7 +249,7 @@ const Statement = ({
                                     getRowAction={row => getRowAction(row)}
                                     onScroll={handleScroll}
                                     passthrough={{
-                                        isTopUp: item => is_virtual && item.action === 'Deposit',
+                                        isTopUp: (item: { action: string }) => is_virtual && item.action === 'Deposit',
                                     }}
                                 >
                                     <PlaceholderComponent is_loading={is_loading} />
@@ -269,7 +264,7 @@ const Statement = ({
                                     rowRenderer={mobileRowRenderer}
                                     row_gap={8}
                                     passthrough={{
-                                        isTopUp: item => is_virtual && item.action === 'Deposit',
+                                        isTopUp: (item: { action: string }) => is_virtual && item.action === 'Deposit',
                                     }}
                                 >
                                     <PlaceholderComponent is_loading={is_loading} />
