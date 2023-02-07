@@ -1,10 +1,9 @@
 import React from 'react';
 import { ProgressSlider } from '@deriv/components';
-import { getCurrentTick } from '@deriv/shared';
+import { getCurrentTick, TContractInfo } from '@deriv/shared';
 import { connect } from 'Stores/connect';
 import { getCardLabels } from '_common/contract';
 import moment from 'moment';
-import { TContractInfo } from '@deriv/shared/src/utils/contract/contract-types';
 import { TRootStore } from 'Stores/index';
 
 type TProgressSliderStream = {
