@@ -3,10 +3,11 @@ import { Icon, Money, DesktopWrapper, ContractCard } from '@deriv/components';
 import { getCardLabels } from '_common/contract';
 import { connect } from 'Stores/connect';
 import { TRootStore } from 'Stores/index';
+import { TContractInfo } from '@deriv/shared';
 
 type TIndicativeCell = {
     amount: number;
-    contract_info: object;
+    contract_info: TContractInfo;
     currency: string;
     status: string;
     is_footer: boolean;
