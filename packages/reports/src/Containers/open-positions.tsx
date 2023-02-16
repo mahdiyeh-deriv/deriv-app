@@ -4,13 +4,12 @@ import {
     DesktopWrapper,
     MobileWrapper,
     ProgressBar,
+    Tabs,
     DataList,
     DataTable,
     ContractCard,
     usePrevious,
     PositionsDrawerCard,
-    Dropdown,
-    SelectNative,
 } from '@deriv/components';
 import {
     urlFor,
@@ -273,7 +272,10 @@ export const OpenPositionsTable = ({
             currency && (
                 <div className='reports__content'>
                     <DesktopWrapper>
-                        <EmptyPlaceholderWrapper component_icon={component_icon} is_empty={is_empty}>
+                        <EmptyPlaceholderWrapper
+                            component_icon={component_icon}
+                            is_empty={active_positions.length === 0}
+                        >
                             <DataTable
                                 className={className}
                                 columns={columns}
@@ -289,7 +291,10 @@ export const OpenPositionsTable = ({
                         </EmptyPlaceholderWrapper>
                     </DesktopWrapper>
                     <MobileWrapper>
-                        <EmptyPlaceholderWrapper component_icon={component_icon} is_empty={is_empty}>
+                        <EmptyPlaceholderWrapper
+                            component_icon={component_icon}
+                            is_empty={active_positions.length === 0}
+                        >
                             <DataList
                                 className={className}
                                 data_source={active_positions}
@@ -297,7 +302,6 @@ export const OpenPositionsTable = ({
                                 rowRenderer={mobileRowRenderer}
                                 getRowAction={getRowAction}
                                 row_gap={8}
-                                keyMapper={item => item?.id}
                             >
                                 <PlaceholderComponent is_loading={is_loading} />
                             </DataList>
@@ -423,18 +427,7 @@ const OpenPositions = ({
     const [active_index, setActiveIndex] = React.useState(is_multiplier ? 1 : 0);
     // Tabs should be visible only when there is at least one active multiplier contract
     const [has_multiplier_contract, setMultiplierContract] = React.useState(false);
-    const [contract_type_value, setContractTypeValue] = React.useState(is_multiplier ? 'Multipliers' : 'Options');
     const previous_active_positions = usePrevious(active_positions);
-    const contract_types = [
-        {
-            text: localize('Options'),
-            value: 'Options',
-        },
-        {
-            text: localize('Multipliers'),
-            value: 'Multipliers',
-        },
-    ];
 
     React.useEffect(() => {
         /*
@@ -465,9 +458,7 @@ const OpenPositions = ({
 
     if (error) return <p>{error}</p>;
 
-    const is_multiplier_selected = contract_type_value === 'Multipliers';
-    const is_options_selected = contract_type_value === 'Options';
-
+    const is_multiplier_selected = has_multiplier_contract && active_index === 1;
     const active_positions_filtered = active_positions?.filter(p => {
         if (p.contract_info) {
             return is_multiplier_selected
@@ -516,10 +507,6 @@ const OpenPositions = ({
         totals: active_positions_filtered_totals,
     };
 
-    const handleChange = e => {
-        setContractTypeValue(e.target.value);
-    };
-
     return (
         <React.Fragment>
             <NotificationMessages />
@@ -563,19 +550,10 @@ const OpenPositions = ({
                 </Tabs>
             ) : (
                 <OpenPositionsTable
-                    is_empty={active_positions_filtered.length === 0}
                     className='open-positions'
                     columns={columns}
                     {...shared_props}
                     row_size={isMobile() ? 5 : 63}
-                />
-            ) : (
-                <OpenPositionsTable
-                    className='open-positions-multiplier open-positions'
-                    columns={columns}
-                    row_size={isMobile() ? 3 : 68}
-                    is_empty={active_positions_filtered.length === 0}
-                    {...shared_props}
                 />
             )}
         </React.Fragment>
