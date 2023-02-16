@@ -1,4 +1,5 @@
-import type { GetAccountStatus, Authorize, DetailsOfEachMT5Loginid, LogOutResponse, GetLimits } from '@deriv/api-types';
+import type { Moment } from 'moment';
+import type { GetAccountStatus, Authorize, DetailsOfEachMT5Loginid, ProposalOpenContract } from '@deriv/api-types';
 import type { RouteComponentProps } from 'react-router';
 
 type TAccount = NonNullable<Authorize['account_list']>[0];
@@ -140,6 +141,7 @@ type TClientStore = {
     }) => DetailsOfEachMT5Loginid[];
     standpoint: {
         iom: string;
+        malta: string;
     };
     setAccountStatus: (status?: GetAccountStatus) => void;
     setBalanceOtherAccounts: (balance: number) => void;
@@ -193,7 +195,7 @@ type TCommonStore = {
     platform: string;
     routeBackInApp: (history: Pick<RouteComponentProps, 'history'>, additional_platform_path?: string[]) => void;
     routeTo: (pathname: string) => void;
-    changeCurrentLanguage: (new_language: string) => void;
+    server_time: Moment;
 };
 
 type TUiStore = {
@@ -212,27 +214,30 @@ type TUiStore = {
     shouldNavigateAfterChooseCrypto: (value: string) => void;
     toggleAccountsDialog: () => void;
     toggleCashier: () => void;
-    toggleSetCurrencyModal: () => void;
+    notification_messages_ui: string;
+    addToast: (obj: Record<string, string>) => void;
+    removeToast: (name: string) => void;
+    should_show_cancellation_warning: boolean;
+    toggleCancellationWarning: () => void;
+    toggleUnsupportedContractModal: () => void;
 };
 
-type TMenuStore = {
-    attach: (item: TMenuItem) => void;
-    update: (menu: TMenuItem, index: number) => void;
+type TPortfolioStore = {
+    getContractById: (id: number) => ProposalOpenContract;
+    active_positions: ProposalOpenContract[];
+    error: TCommonStoreError;
+    getPositionById: (id: number) => ProposalOpenContract;
+    is_loading: boolean;
+    is_multiplier: boolean;
+    onClickCancel: () => void;
+    onClickSell: () => void;
+    onMount: () => void;
+    onClickRemove: () => void;
+    removePositionById: (id: number) => void;
 };
 
-type TNotificationStore = {
-    addNotificationMessage: (message: TNotification) => void;
-    filterNotificationMessages: () => void;
-    refreshNotifications: () => void;
-    removeNotificationByKey: (obj: { key: string }) => void;
-    removeNotificationMessage: (obj: { key: string; should_show_again?: boolean }) => void;
-    setP2POrderProps: () => void;
-};
-
-type TTradersHubStore = {
-    closeModal: () => void;
-    content_flag: any;
-    openModal: (modal_id: string, props?: any) => void;
+type TContractStore = {
+    getContractById: (id: number) => ProposalOpenContract;
 };
 
 export type TRootStore = {
@@ -241,6 +246,6 @@ export type TRootStore = {
     menu: TMenuStore;
     ui: TUiStore;
     modules: Record<string, any>;
-    notifications: TNotificationStore;
-    traders_hub: TTradersHubStore;
+    portfolio: TPortfolioStore;
+    contract_trade: TContractStore;
 };
