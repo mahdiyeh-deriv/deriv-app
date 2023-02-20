@@ -1,4 +1,5 @@
 import merge from 'lodash.merge';
+import moment from 'moment';
 import type { TRootStore } from '../types';
 
 const mock = (): TRootStore => {
@@ -151,6 +152,7 @@ const mock = (): TRootStore => {
             responseTradingPlatformAccountsList: jest.fn(),
             standpoint: {
                 iom: '',
+                malta: '',
             },
             switchAccount: jest.fn(),
             verification_code: {
@@ -208,6 +210,7 @@ const mock = (): TRootStore => {
             routeTo: jest.fn(),
             changeCurrentLanguage: jest.fn(),
             is_network_online: false,
+            server_time: moment(),
         },
         ui: {
             current_focus: null,
@@ -226,6 +229,11 @@ const mock = (): TRootStore => {
             setRealAccountSignupEnd: jest.fn(),
             shouldNavigateAfterChooseCrypto: jest.fn(),
             toggleSetCurrencyModal: jest.fn(),
+            addToast: jest.fn(),
+            removeToast: jest.fn(),
+            should_show_cancellation_warning: false,
+            toggleCancellationWarning: jest.fn(),
+            toggleUnsupportedContractModal: jest.fn(),
         },
         traders_hub: {
             closeModal: jest.fn(),
@@ -243,6 +251,34 @@ const mock = (): TRootStore => {
             removeNotificationByKey: jest.fn(),
             removeNotificationMessage: jest.fn(),
             setP2POrderProps: jest.fn(),
+        },
+        portfolio: {
+            getContractById: jest.fn(),
+            active_positions: [],
+            error: {
+                header: '',
+                message: '',
+                type: '',
+                redirect_label: '',
+                redirect_to: '',
+                should_clear_error_on_click: false,
+                should_show_refresh: false,
+                redirectOnClick: jest.fn(),
+                setError: jest.fn(),
+                app_routing_history: [],
+            },
+            getPositionById: jest.fn(),
+            is_loading: false,
+            is_multiplier: false,
+            onClickCancel: jest.fn(),
+            onClickSell: jest.fn(),
+            onMount: jest.fn(),
+            onClickRemove: jest.fn(),
+            removePositionById: jest.fn(),
+        },
+        contract_trade: {
+            getContractById: jest.fn(),
+            toggleSetCurrencyModal: jest.fn(),
         },
         modules: {},
     };

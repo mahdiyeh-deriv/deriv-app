@@ -1,4 +1,12 @@
-import type { GetAccountStatus, Authorize, DetailsOfEachMT5Loginid, LogOutResponse, GetLimits } from '@deriv/api-types';
+import type { Moment } from 'moment';
+import type {
+    GetAccountStatus,
+    Authorize,
+    DetailsOfEachMT5Loginid,
+    LogOutResponse,
+    GetLimits,
+    ProposalOpenContract,
+} from '@deriv/api-types';
 import type { RouteComponentProps } from 'react-router';
 
 type TAccount = NonNullable<Authorize['account_list']>[0];
@@ -140,6 +148,7 @@ type TClientStore = {
     }) => DetailsOfEachMT5Loginid[];
     standpoint: {
         iom: string;
+        malta: string;
     };
     setAccountStatus: (status?: GetAccountStatus) => void;
     setBalanceOtherAccounts: (balance: number) => void;
@@ -193,6 +202,7 @@ type TCommonStore = {
     platform: string;
     routeBackInApp: (history: Pick<RouteComponentProps, 'history'>, additional_platform_path?: string[]) => void;
     routeTo: (pathname: string) => void;
+    server_time: Moment;
     changeCurrentLanguage: (new_language: string) => void;
 };
 
@@ -212,6 +222,30 @@ type TUiStore = {
     shouldNavigateAfterChooseCrypto: (value: string) => void;
     toggleAccountsDialog: () => void;
     toggleCashier: () => void;
+    addToast: (obj: Record<string, string>) => void;
+    removeToast: (name: string) => void;
+    should_show_cancellation_warning: boolean;
+    toggleCancellationWarning: () => void;
+    toggleUnsupportedContractModal: () => void;
+    toggleSetCurrencyModal: () => void;
+};
+
+type TPortfolioStore = {
+    getContractById: (id: number) => ProposalOpenContract;
+    active_positions: ProposalOpenContract[];
+    error: TCommonStoreError;
+    getPositionById: (id: number) => ProposalOpenContract;
+    is_loading: boolean;
+    is_multiplier: boolean;
+    onClickCancel: () => void;
+    onClickSell: () => void;
+    onMount: () => void;
+    onClickRemove: () => void;
+    removePositionById: (id: number) => void;
+};
+
+type TContractStore = {
+    getContractById: (id: number) => ProposalOpenContract;
     toggleSetCurrencyModal: () => void;
 };
 
@@ -241,6 +275,8 @@ export type TRootStore = {
     menu: TMenuStore;
     ui: TUiStore;
     modules: Record<string, any>;
+    portfolio: TPortfolioStore;
+    contract_trade: TContractStore;
     notifications: TNotificationStore;
     traders_hub: TTradersHubStore;
 };
