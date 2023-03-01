@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect, RouteComponentProps } from 'react-router-dom';
 import {
     Div100vhContainer,
     VerticalTab,
@@ -14,7 +13,32 @@ import {
 import { getSelectedRoute } from '@deriv/shared';
 import { localize } from '@deriv/translations';
 import { connect } from 'Stores/connect';
+import { TRoute } from '../Types';
+import { TRootStore } from 'Stores/index';
 import 'Sass/app/modules/reports.scss';
+
+type TList = {
+    value: React.ComponentType | typeof Redirect;
+    default?: boolean;
+    label: string;
+    icon?: string;
+    path?: string;
+};
+
+type TReports = {
+    history: RouteComponentProps['history'];
+    is_logged_in: boolean;
+    is_logging_in: boolean;
+    is_from_derivgo: boolean;
+    is_visible: boolean;
+    location: RouteComponentProps['location'];
+    routeBackInApp: (history: RouteComponentProps['history'], additional_platform_path?: string[]) => void;
+    routes: TRoute[];
+    setTabIndex: (value: number) => void;
+    setVisibilityRealityCheck: (value: number) => void;
+    tab_index: number;
+    toggleReports: (value: boolean) => void;
+};
 
 const Reports = ({
     history,
@@ -29,7 +53,7 @@ const Reports = ({
     setVisibilityRealityCheck,
     tab_index,
     toggleReports,
-}) => {
+}: TReports) => {
     React.useEffect(() => {
         toggleReports(true);
         return () => {
@@ -41,10 +65,10 @@ const Reports = ({
 
     const onClickClose = () => routeBackInApp(history);
 
-    const handleRouteChange = e => history.push(e.target.value);
+    const handleRouteChange = (e: React.ChangeEvent<HTMLSelectElement>) => history.push(e.target.value);
 
     const menu_options = () => {
-        const options = [];
+        const options: TList[] = [];
 
         routes.forEach(route => {
             options.push({
@@ -70,10 +94,7 @@ const Reports = ({
                 <PageOverlay header={localize('Reports')} onClickClose={onClickClose} is_from_app={is_from_derivgo}>
                     <DesktopWrapper>
                         <VerticalTab
-                            alignment='center'
-                            id='report'
                             is_floating
-                            classNameHeader='reports__tab-header'
                             current_path={location.pathname}
                             is_routed
                             is_full_width
@@ -88,14 +109,16 @@ const Reports = ({
                                 className='reports__route-selection'
                                 list_items={menu_options().map(option => ({
                                     text: option.label,
-                                    value: option.path,
+                                    value: option.path ?? '',
                                 }))}
-                                value={selected_route.path}
+                                value={selected_route.path ?? ''}
                                 should_show_empty_option={false}
                                 onChange={handleRouteChange}
+                                label={''}
+                                hide_top_placeholder={false}
                             />
-                            {selected_route && (
-                                <selected_route.component component_icon={selected_route.icon_component} />
+                            {selected_route?.component && (
+                                <selected_route.component icon_component={selected_route.icon_component} />
                             )}
                         </Div100vhContainer>
                     </MobileWrapper>
@@ -105,29 +128,16 @@ const Reports = ({
     );
 };
 
-Reports.propTypes = {
-    history: PropTypes.object,
-    is_logged_in: PropTypes.bool,
-    is_logging_in: PropTypes.bool,
-    is_from_derivgo: PropTypes.bool,
-    is_visible: PropTypes.bool,
-    location: PropTypes.object,
-    routeBackInApp: PropTypes.func,
-    routes: PropTypes.arrayOf(PropTypes.object),
-    setTabIndex: PropTypes.func,
-    setVisibilityRealityCheck: PropTypes.func,
-    tab_index: PropTypes.number,
-    toggleReports: PropTypes.func,
-};
-
-export default connect(({ client, common, ui }) => ({
-    is_logged_in: client.is_logged_in,
-    is_logging_in: client.is_logging_in,
-    is_from_derivgo: common.is_from_derivgo,
-    is_visible: ui.is_reports_visible,
-    routeBackInApp: common.routeBackInApp,
-    setVisibilityRealityCheck: client.setVisibilityRealityCheck,
-    setTabIndex: ui.setReportsTabIndex,
-    tab_index: ui.reports_route_tab_index,
-    toggleReports: ui.toggleReports,
-}))(withRouter(Reports));
+export default withRouter(
+    connect(({ client, common, ui }: TRootStore) => ({
+        is_logged_in: client.is_logged_in,
+        is_logging_in: client.is_logging_in,
+        is_from_derivgo: common.is_from_derivgo,
+        is_visible: ui.is_reports_visible,
+        routeBackInApp: common.routeBackInApp,
+        setVisibilityRealityCheck: client.setVisibilityRealityCheck,
+        setTabIndex: ui.setReportsTabIndex,
+        tab_index: ui.reports_route_tab_index,
+        toggleReports: ui.toggleReports,
+    }))(Reports)
+);
