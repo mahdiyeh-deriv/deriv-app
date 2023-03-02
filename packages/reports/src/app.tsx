@@ -19,9 +19,7 @@ const App = ({ passthrough }: TAppProps) => {
     return (
         <MobxContentProvider store={root_store}>
             <StoreProvider store={root_store}>
-                <React.Fragment>
-                    <Routes />
-                </React.Fragment>
+                <Routes />
             </StoreProvider>
         </MobxContentProvider>
     );
