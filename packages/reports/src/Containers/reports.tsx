@@ -1,20 +1,19 @@
 import React from 'react';
-import { withRouter, Redirect, RouteComponentProps } from 'react-router-dom';
+import { Redirect, RouteComponentProps } from 'react-router-dom';
 import {
-    Div100vhContainer,
-    VerticalTab,
     DesktopWrapper,
-    MobileWrapper,
+    Div100vhContainer,
     FadeWrapper,
+    Loading,
+    MobileWrapper,
     PageOverlay,
     SelectNative,
-    Loading,
+    VerticalTab,
 } from '@deriv/components';
 import { getSelectedRoute } from '@deriv/shared';
 import { localize } from '@deriv/translations';
-import { connect } from 'Stores/connect';
+import { observer, useStore } from '@deriv/stores';
 import { TRoute } from '../Types';
-import { TRootStore } from 'Stores/index';
 import 'Sass/app/modules/reports.scss';
 
 type TList = {
@@ -27,33 +26,17 @@ type TList = {
 
 type TReports = {
     history: RouteComponentProps['history'];
-    is_logged_in: boolean;
-    is_logging_in: boolean;
-    is_from_derivgo: boolean;
-    is_visible: boolean;
     location: RouteComponentProps['location'];
-    routeBackInApp: (history: RouteComponentProps['history'], additional_platform_path?: string[]) => void;
     routes: TRoute[];
-    setTabIndex: (value: number) => void;
-    setVisibilityRealityCheck: (value: number) => void;
-    tab_index: number;
-    toggleReports: (value: boolean) => void;
 };
 
-const Reports = ({
-    history,
-    is_logged_in,
-    is_logging_in,
-    is_from_derivgo,
-    is_visible,
-    location,
-    routeBackInApp,
-    routes,
-    setTabIndex,
-    setVisibilityRealityCheck,
-    tab_index,
-    toggleReports,
-}: TReports) => {
+const Reports = observer(({ history, location, routes }: TReports) => {
+    const { client, common, ui } = useStore();
+
+    const { is_logged_in, is_logging_in, setVisibilityRealityCheck } = client;
+    const { is_from_derivgo, routeBackInApp } = common;
+    const { is_reports_visible, setReportsTabIndex, reports_route_tab_index, toggleReports } = ui;
+
     React.useEffect(() => {
         toggleReports(true);
         return () => {
@@ -89,7 +72,7 @@ const Reports = ({
         return <Loading is_fullscreen />;
     }
     return (
-        <FadeWrapper is_visible={is_visible} className='reports-page-wrapper' keyname='reports-page-wrapper'>
+        <FadeWrapper is_visible={is_reports_visible} className='reports-page-wrapper' keyname='reports-page-wrapper'>
             <div className='reports'>
                 <PageOverlay header={localize('Reports')} onClickClose={onClickClose} is_from_app={is_from_derivgo}>
                     <DesktopWrapper>
@@ -98,8 +81,8 @@ const Reports = ({
                             current_path={location.pathname}
                             is_routed
                             is_full_width
-                            setVerticalTabIndex={setTabIndex}
-                            vertical_tab_index={selected_route.default ? 0 : tab_index}
+                            setVerticalTabIndex={setReportsTabIndex}
+                            vertical_tab_index={selected_route.default ? 0 : reports_route_tab_index}
                             list={menu_options()}
                         />
                     </DesktopWrapper>
@@ -126,18 +109,6 @@ const Reports = ({
             </div>
         </FadeWrapper>
     );
-};
+});
 
-export default withRouter(
-    connect(({ client, common, ui }: TRootStore) => ({
-        is_logged_in: client.is_logged_in,
-        is_logging_in: client.is_logging_in,
-        is_from_derivgo: common.is_from_derivgo,
-        is_visible: ui.is_reports_visible,
-        routeBackInApp: common.routeBackInApp,
-        setVisibilityRealityCheck: client.setVisibilityRealityCheck,
-        setTabIndex: ui.setReportsTabIndex,
-        tab_index: ui.reports_route_tab_index,
-        toggleReports: ui.toggleReports,
-    }))(Reports)
-);
+export default Reports;
