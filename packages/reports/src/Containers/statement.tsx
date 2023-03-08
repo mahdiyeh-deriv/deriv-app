@@ -8,8 +8,8 @@ import { getSupportedContracts } from '_common/contract';
 import { connect } from 'Stores/connect';
 import { getStatementTableColumnsTemplate } from '../Constants/data-table-constants';
 import PlaceholderComponent from '../Components/placeholder-component';
-import AccountStatistics, { TAccountStatistics } from '../Components/account-statistics';
-import FilterComponent, { TFilterComponent } from '../Components/filter-component';
+import AccountStatistics from '../Components/account-statistics';
+import FilterComponent from '../Components/filter-component';
 import { ReportsMeta } from '../Components/reports-meta';
 import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message';
 import { TRootStore } from 'Stores/index';
@@ -47,14 +47,14 @@ type TGetSupportedContractsReturn = ReturnType<typeof getSupportedContracts>;
 
 type TStatement = {
     action_type: string;
-    account_statistics: Pick<TAccountStatistics, 'account_statistics'>;
+    account_statistics: React.ComponentProps<typeof AccountStatistics>['account_statistics'];
     component_icon: string;
     currency: string;
     data: TFormatStatementTransaction[];
     date_from: number | null;
     date_to: number | null;
     error: string;
-    filtered_date_range: Pick<TFilterComponent, 'filtered_date_range'>;
+    filtered_date_range: React.ComponentProps<typeof FilterComponent>['filtered_date_range'];
     handleDateChange: () => void;
     handleFilterChange: () => void;
     handleScroll: () => void;

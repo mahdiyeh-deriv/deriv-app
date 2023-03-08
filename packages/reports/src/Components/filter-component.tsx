@@ -5,7 +5,7 @@ import { connect } from 'Stores/connect';
 import CompositeCalendar from './Form/CompositeCalendar';
 import { TRootStore } from 'Stores/index';
 
-export type TFilterComponent = {
+type TFilterComponent = {
     action_type: string;
     date_from: number;
     date_to: number;
