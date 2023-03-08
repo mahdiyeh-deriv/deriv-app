@@ -9,7 +9,7 @@ import { connect } from 'Stores/connect';
 import { getStatementTableColumnsTemplate } from '../Constants/data-table-constants';
 import PlaceholderComponent from '../Components/placeholder-component';
 import AccountStatistics, { TAccountStatistics } from '../Components/account-statistics';
-import FilterComponent from '../Components/filter-component';
+import FilterComponent, { TFilterComponent } from '../Components/filter-component';
 import { ReportsMeta } from '../Components/reports-meta';
 import EmptyTradeHistoryMessage from '../Components/empty-trade-history-message';
 import { TRootStore } from 'Stores/index';
@@ -54,7 +54,7 @@ type TStatement = {
     date_from: number | null;
     date_to: number | null;
     error: string;
-    filtered_date_range: Record<string, any>;
+    filtered_date_range: Pick<TFilterComponent, 'filtered_date_range'>;
     handleDateChange: () => void;
     handleFilterChange: () => void;
     handleScroll: () => void;
@@ -203,7 +203,7 @@ const Statement = ({
         return map;
     }, {} as Record<TColIndex, typeof columns[number]>);
 
-    // export type instead of any from 'DataList' component when it migrates to tsx
+    // TODO: Export type instead of any from 'DataList' component when it migrates to tsx
     const mobileRowRenderer = ({ row, passthrough }: any) => (
         <React.Fragment>
             <div className='data-list__row'>
