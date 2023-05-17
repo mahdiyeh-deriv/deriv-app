@@ -3,17 +3,19 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { isMobile } from '@deriv/shared';
 import AccountTransferForm from '../account-transfer-form';
 import CashierProviders from '../../../../cashier-providers';
+import { mockStore } from '@deriv/stores';
+import { TError } from '../../../../types';
 
 jest.mock('@deriv/shared/src/utils/screen/responsive', () => ({
     ...jest.requireActual('@deriv/shared/src/utils/screen/responsive'),
     isMobile: jest.fn(),
 }));
 
-let mockRootStore;
+let mockRootStore: ReturnType<typeof mockStore>;
 
 describe('<AccountTransferForm />', () => {
     beforeEach(() => {
-        mockRootStore = {
+        mockRootStore = mockStore({
             client: {
                 account_limits: {
                     daily_transfers: {
@@ -25,7 +27,7 @@ describe('<AccountTransferForm />', () => {
                 mt5_login_list: [
                     {
                         login: 'value',
-                        market_type: 'gaming',
+                        market_type: 'financial',
                         server_info: {
                             geolocation: {
                                 region: 'region',
@@ -89,7 +91,7 @@ describe('<AccountTransferForm />', () => {
             traders_hub: {
                 selected_account: {},
             },
-        };
+        });
     });
     beforeAll(() => {
         const modal_root_el = document.createElement('div');
@@ -107,7 +109,7 @@ describe('<AccountTransferForm />', () => {
         error: {
             code: 'testCode',
             message: 'testMessage',
-        },
+        } as TError,
     };
 
     const renderAccountTransferForm = () => {
@@ -200,7 +202,7 @@ describe('<AccountTransferForm />', () => {
         props.error = {
             code: 'Fiat2CryptoTransferOverLimit',
             message: 'testMessage',
-        };
+        } as TError;
 
         renderAccountTransferForm();
 
@@ -211,7 +213,7 @@ describe('<AccountTransferForm />', () => {
         props.error = {
             code: 'testCode',
             message: 'testMessage',
-        };
+        } as TError;
 
         renderAccountTransferForm();
 
