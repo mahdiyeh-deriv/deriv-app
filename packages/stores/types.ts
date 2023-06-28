@@ -626,8 +626,6 @@ type TTradersHubStore = {
     setWalletModalActiveWalletID: (wallet_id?: string) => void;
     is_wallet_upgrade_in_progress: boolean;
     setWalletsUpgradeInProgressPopup: (value: boolean) => void;
-    is_wallet_upgrade_ready: boolean;
-    setWalletsUpgradeReadyPopup: (value: boolean) => void;
 };
 
 /**

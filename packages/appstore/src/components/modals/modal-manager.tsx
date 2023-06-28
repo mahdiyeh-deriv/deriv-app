@@ -22,7 +22,6 @@ import RealWalletsUpgrade from './real-wallets-upgrade/real-wallets-upgrade';
 import WalletsMigrationFailed from './wallets-migration-failed';
 import WalletModal from './wallet-modal';
 import WalletsUpgradeInProgress from './wallets-upgrade-in-progress';
-import WalletsUpgradeReady from './wallets-upgrade-ready';
 
 type TCurrentList = DetailsOfEachMT5Loginid & {
     enabled: number;
@@ -174,7 +173,6 @@ const ModalManager = () => {
             <RealWalletsUpgrade />
             <WalletsMigrationFailed />
             <WalletsUpgradeInProgress />
-            <WalletsUpgradeReady />
             <WalletModal />
         </React.Fragment>
     );
