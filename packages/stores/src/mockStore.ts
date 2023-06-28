@@ -399,6 +399,8 @@ const mock = (): TStores & { is_mock: boolean } => {
             setWalletModalActiveWalletID: jest.fn(),
             is_wallet_upgrade_in_progress: false,
             setWalletsUpgradeInProgressPopup: jest.fn(),
+            is_wallet_migration_in_progress: false,
+            setWalletsMigrationInProgressPopup: jest.fn(),
         },
         menu: {
             attach: jest.fn(),
