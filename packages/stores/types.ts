@@ -427,6 +427,8 @@ type TClientStore = {
     setFinancialAndTradingAssessment: (
         payload: SetFinancialAssessmentRequest
     ) => Promise<SetFinancialAssessmentResponse>;
+    wallet_migration_status: 'ineligible' | 'eligible' | 'in_progress' | 'done' | 'failed';
+    setWalletMigrationStatus: (value: TClientStore['wallet_migration_status']) => void;
 };
 
 type TCommonStoreError = {

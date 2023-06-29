@@ -49,3 +49,6 @@ export { default as useWalletsList } from './useWalletsList';
 export { default as useAvailableWallets } from './useAvailableWallets';
 export { default as useAuthorize } from './useAuthorize';
 export { default as useWalletTransactions } from './useWalletTransactions';
+export { default as useContentFlag } from './useContentFlag';
+export { default as useWalletList } from './useWalletsList';
+export { default as useWalletMigration } from './useWalletMigration';

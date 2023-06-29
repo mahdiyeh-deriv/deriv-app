@@ -242,6 +242,8 @@ const mock = (): TStores & { is_mock: boolean } => {
             init: jest.fn(),
             setLoginId: jest.fn(),
             resetLocalStorageValues: jest.fn(),
+            wallet_migration_status: 'eligible',
+            setWalletMigrationStatus: jest.fn(),
         },
         common: {
             error: {
