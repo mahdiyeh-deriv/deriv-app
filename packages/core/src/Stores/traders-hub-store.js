@@ -31,6 +31,8 @@ export default class TradersHubStore extends BaseStore {
     is_real_wallets_upgrade_on = false;
     is_wallet_migration_failed = false;
     is_wallet_migration_in_progress = false;
+    active_modal_tab = undefined;
+    active_modal_wallet_id = undefined;
 
     constructor(root_store) {
         super({ root_store });
@@ -59,7 +61,6 @@ export default class TradersHubStore extends BaseStore {
             open_failed_verification_for: observable,
             is_real_wallets_upgrade_on: observable,
             is_wallet_migration_failed: observable,
-            is_wallet_migration_in_progress: observable,
             can_get_more_cfd_mt5_accounts: computed,
             closeModal: action.bound,
             content_flag: computed,
@@ -107,7 +108,6 @@ export default class TradersHubStore extends BaseStore {
             showTopUpModal: action.bound,
             toggleWalletsUpgrade: action.bound,
             setWalletsMigrationFailedPopup: action.bound,
-            setWalletsMigrationInProgressPopup: action.bound,
         });
 
         reaction(
@@ -801,9 +801,5 @@ export default class TradersHubStore extends BaseStore {
 
     setWalletsMigrationFailedPopup(value) {
         this.is_wallet_migration_failed = value;
-    }
-
-    setWalletsMigrationInProgressPopup(value) {
-        this.is_wallet_migration_in_progress = value;
     }
 }

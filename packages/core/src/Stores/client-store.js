@@ -155,6 +155,7 @@ export default class ClientStore extends BaseStore {
     p2p_advertiser_info = {};
     prev_account_type = 'demo';
     external_url_params = {};
+    is_wallet_migration_in_progress = false;
     // TODO: delete when BE or mockServer start to work
     wallet_migration_status = 'in_progress';
 
@@ -227,6 +228,7 @@ export default class ClientStore extends BaseStore {
             prev_real_account_loginid: observable,
             p2p_advertiser_info: observable,
             prev_account_type: observable,
+            is_wallet_migration_in_progress: observable,
             // TODO: delete when BE or mockServer start to work
             wallet_migration_status: observable,
             balance: computed,
@@ -412,6 +414,7 @@ export default class ClientStore extends BaseStore {
             setPrevRealAccountLoginid: action.bound,
             setP2pAdvertiserInfo: action.bound,
             setPrevAccountType: action.bound,
+            setWalletsMigrationInProgressPopup: action.bound,
             // TODO: delete when BE or mockServer start to work
             setWalletMigrationStatus: action.bound,
         });
@@ -2774,5 +2777,9 @@ export default class ClientStore extends BaseStore {
     setWalletMigrationStatus = value => {
         this.wallet_migration_status = value;
     };
+
+    setWalletsMigrationInProgressPopup(value) {
+        this.is_wallet_migration_in_progress = value;
+    }
 }
 /* eslint-enable */
