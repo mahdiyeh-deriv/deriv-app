@@ -347,6 +347,16 @@ type TPrivateSocketEndpoints = {
              */
             req_id?: number;
             [k: string]: unknown;
+/** Remove this after we have the types from BE */
+type TPrivateEndpoints = {
+    wallet_migration: {
+        request: {
+            wallet_migration: 'status' | 'start' | 'reset';
+        };
+        response: {
+            wallet_migration: {
+                status: 'ineligible' | 'eligible' | 'in_progress' | 'done' | 'failed';
+            };
         };
     };
 };
@@ -804,7 +814,11 @@ type TSocketEndpoints = {
         request: ServerStatusRequest;
         response: ServerStatusResponse;
     };
+<<<<<<< HEAD
 } & TPrivateSocketEndpoints;
+=======
+} & TPrivateEndpoints;
+>>>>>>> 48b9e93d00 (feat: modify useWalletMigration hook)
 
 export type TSocketEndpointNames = keyof TSocketEndpoints;
 
