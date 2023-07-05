@@ -238,6 +238,8 @@ const mock = (): TStores & { is_mock: boolean } => {
             real_account_creation_unlock_date: '',
             has_any_real_account: false,
             setPrevAccountType: jest.fn(),
+            is_wallet_migration_in_progress_popup: false,
+            setWalletsMigrationInProgressPopup: jest.fn(),
             setLoginInformation: jest.fn(),
             init: jest.fn(),
             setLoginId: jest.fn(),
@@ -245,7 +247,6 @@ const mock = (): TStores & { is_mock: boolean } => {
             wallet_migration_status: 'eligible',
             setWalletMigrationStatus: jest.fn(),
             is_wallet_migration_in_progress: false,
-            setWalletsMigrationInProgressPopup: jest.fn(),
         },
         common: {
             error: {

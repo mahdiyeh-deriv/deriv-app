@@ -430,6 +430,7 @@ type TClientStore = {
     wallet_migration_status: 'ineligible' | 'eligible' | 'in_progress' | 'done' | 'failed';
     setWalletMigrationStatus: (value: TClientStore['wallet_migration_status']) => void;
     is_wallet_migration_in_progress: boolean;
+    is_wallet_migration_in_progress_popup: boolean;
     setWalletsMigrationInProgressPopup: (value: boolean) => void;
 };
 
