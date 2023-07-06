@@ -355,7 +355,7 @@ type TPrivateEndpoints = {
         };
         response: {
             wallet_migration: {
-                status: 'ineligible' | 'eligible' | 'in_progress' | 'done' | 'failed';
+                status: 'ineligible' | 'eligible' | 'in_progress' | 'migrated' | 'failed';
             };
         };
     };
