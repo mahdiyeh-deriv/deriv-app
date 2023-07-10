@@ -351,11 +351,11 @@ type TPrivateSocketEndpoints = {
 type TPrivateEndpoints = {
     wallet_migration: {
         request: {
-            wallet_migration: 'status' | 'start' | 'reset';
+            wallet_migration: 'state' | 'start' | 'reset';
         };
         response: {
             wallet_migration: {
-                status: 'ineligible' | 'eligible' | 'in_progress' | 'migrated' | 'failed';
+                state: 'ineligible' | 'eligible' | 'in_progress' | 'migrated' | 'failed';
             };
         };
     };
