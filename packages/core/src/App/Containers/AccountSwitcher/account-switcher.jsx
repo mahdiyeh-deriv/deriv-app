@@ -246,6 +246,7 @@ const AccountSwitcher = ({
                                     redirectAccount={account.is_disabled ? undefined : () => doSwitch(account.loginid)}
                                     onClickResetVirtualBalance={resetBalance}
                                     selected_loginid={account_loginid}
+                                    setWalletsMigrationInProgressPopup={setWalletsMigrationInProgressPopup}
                                 />
                             ))}
                     </div>
@@ -295,6 +296,7 @@ const AccountSwitcher = ({
                                                 }
                                                 selected_loginid={account_loginid}
                                                 should_show_server_name={checkMultipleSvgAcc()}
+                                                setWalletsMigrationInProgressPopup={setWalletsMigrationInProgressPopup}
                                             />
                                         );
                                     })}
@@ -315,7 +317,10 @@ const AccountSwitcher = ({
                                             <Button
                                                 id='dt_core_account-switcher_add-new-account'
                                                 onClick={() => {
-                                                    if (real_account_creation_unlock_date) {
+                                                    if (is_in_progress) {
+                                                        closeAccountsDialog();
+                                                        setWalletsMigrationInProgressPopup(true);
+                                                    } else if (real_account_creation_unlock_date) {
                                                         closeAccountsDialog();
                                                         setShouldShowCooldownModal(true);
                                                     } else openRealAccountSignup('svg');
@@ -323,6 +328,7 @@ const AccountSwitcher = ({
                                                 className='acc-switcher__new-account-btn'
                                                 secondary
                                                 small
+                                                as_disabled={is_in_progress}
                                             >
                                                 {localize('Add')}
                                             </Button>
@@ -368,6 +374,7 @@ const AccountSwitcher = ({
                                             }
                                             selected_loginid={account_loginid}
                                             should_show_server_name={checkMultipleSvgAcc()}
+                                            setWalletsMigrationInProgressPopup={setWalletsMigrationInProgressPopup}
                                         />
                                     );
                                 })}
@@ -388,7 +395,10 @@ const AccountSwitcher = ({
                                         <Button
                                             id='dt_core_account-switcher_add-new-account'
                                             onClick={() => {
-                                                if (real_account_creation_unlock_date) {
+                                                if (is_in_progress) {
+                                                    closeAccountsDialog();
+                                                    setWalletsMigrationInProgressPopup(true);
+                                                } else if (real_account_creation_unlock_date) {
                                                     closeAccountsDialog();
                                                     setShouldShowCooldownModal(true);
                                                 } else {
@@ -398,6 +408,7 @@ const AccountSwitcher = ({
                                             className='acc-switcher__new-account-btn'
                                             secondary
                                             small
+                                            as_disabled={is_in_progress}
                                         >
                                             {localize('Add')}
                                         </Button>
