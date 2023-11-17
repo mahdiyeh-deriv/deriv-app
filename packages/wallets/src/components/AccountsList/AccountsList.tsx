@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { CFDPlatformsList } from '../../features';
 import useDevice from '../../hooks/useDevice';
+import { TabList, TabPanel, TabPanels, Tabs } from '../Base';
 import { OptionsAndMultipliersListing } from '../OptionsAndMultipliersListing';
-import {
-    WalletsPrimaryTabList,
-    WalletsPrimaryTabPanel,
-    WalletsPrimaryTabPanels,
-    WalletsPrimaryTabs,
-} from '../WalletsPrimaryTabs';
 import { WalletMobileTourGuide } from '../WalletTourGuide';
 import './AccountsList.scss';
 
@@ -18,24 +13,24 @@ const AccountsList = () => {
 
     if (isMobile) {
         return (
-            <WalletsPrimaryTabs className='wallets-accounts-list'>
+            <Tabs className='wallets-accounts-list'>
                 {/* TODO: Localization needed on tab headers */}
-                <WalletsPrimaryTabList list={['CFDs', 'Options & multipliers']} />
-                <WalletsPrimaryTabPanels>
-                    <WalletsPrimaryTabPanel>
+                <TabList list={['CFDs', 'Options & multipliers']} />
+                <TabPanels>
+                    <TabPanel>
                         <CFDPlatformsList onMT5PlatformListLoaded={setIsMT5PlatformListLoaded} />
-                    </WalletsPrimaryTabPanel>
-                    <WalletsPrimaryTabPanel>
+                    </TabPanel>
+                    <TabPanel>
                         <OptionsAndMultipliersListing
                             onOptionsAndMultipliersLoaded={setIsOptionsAndMultipliersLoaded}
                         />
-                    </WalletsPrimaryTabPanel>
-                </WalletsPrimaryTabPanels>
+                    </TabPanel>
+                </TabPanels>
                 <WalletMobileTourGuide
                     isMT5PlatformListLoaded={isMT5PlatformListLoaded}
                     isOptionsAndMultipliersLoaded={isOptionsAndMultipliersLoaded}
                 />
-            </WalletsPrimaryTabs>
+            </Tabs>
         );
     }
 

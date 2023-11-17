@@ -23,7 +23,7 @@ import type {
     WebsiteStatus,
 } from '@deriv/api-types';
 
-import type { FeatureFlagsStore } from './src/stores';
+import type { ExchangeRatesStore, FeatureFlagsStore } from './src/stores';
 
 type TRoutes =
     | '/404'
@@ -125,9 +125,6 @@ type AvailableAccount = {
     availability: TRegionAvailability;
     short_code_and_region?: string;
     login?: string;
-    currency?: string;
-    display_balance?: string;
-    display_login?: string;
 };
 
 type BrandConfig = {
@@ -229,14 +226,14 @@ type TTradingPlatformAvailableAccount = {
         };
         signup: string[];
     };
-    shortcode?: DetailsOfEachMT5Loginid['landing_company_short'];
+    shortcode: 'bvi' | 'labuan' | 'svg' | 'vanuatu' | 'maltainvest';
     sub_account_type: string;
 };
 
 type TAvailableCFDAccounts = {
     availability: 'Non-EU' | 'EU' | 'All';
     description: string;
-    icon: 'Derived' | 'Financial' | 'DerivX' | 'SwapFree' | 'CTrader';
+    icon: 'Derived' | 'Financial' | 'DerivX' | 'SwapFree' | 'Ctrader';
     market_type: 'synthetic' | 'financial' | 'all' | 'gaming';
     name: string;
     platform: 'mt5' | 'dxtrade' | 'ctrader';
@@ -551,7 +548,7 @@ type TCommonStore = {
     is_language_changing: boolean;
     services_error: TCommonStoreServicesError;
     is_socket_opened: boolean;
-    setAppstorePlatform: (value?: string) => void;
+    setAppstorePlatform: (value: string) => void;
     setError?: (has_error: boolean, error: TCommonStoreError) => void;
     setSelectedContractType: (contract_type: string) => void;
     setServicesError: (error: TCommonStoreServicesError) => void;
@@ -868,8 +865,6 @@ type TModalData = {
     data: Record<string, unknown>;
 };
 
-type TPlatform = 'mt5' | 'dxtrade' | 'ctrader';
-
 type TTradersHubStore = {
     closeModal: () => void;
     content_flag: 'low_risk_cr_eu' | 'low_risk_cr_non_eu' | 'high_risk_cr' | 'cr_demo' | 'eu_demo' | 'eu_real' | '';
@@ -883,9 +878,8 @@ type TTradersHubStore = {
             action_type: 'get' | 'none' | 'trade' | 'dxtrade' | 'multi-action';
             key: string;
             name: string;
-            landing_company_short?: DetailsOfEachMT5Loginid['landing_company_short'];
-            platform?: TPlatform;
-            availability?: TRegionAvailability;
+            landing_company_short?: 'bvi' | 'labuan' | 'svg' | 'vanuatu' | 'maltainvest';
+            platform?: string;
             description?: string;
             market_type?: 'all' | 'financial' | 'synthetic';
         }[];
@@ -940,9 +934,9 @@ type TTradersHubStore = {
     is_mt5_notification_modal_visible: boolean;
     setMT5NotificationModal: (value: boolean) => void;
     has_any_real_account: boolean;
-    startTrade: (platform?: TPlatform, existing_account?: DetailsOfEachMT5Loginid) => void;
+    startTrade: () => void;
     getAccount: () => void;
-    showTopUpModal: (existing_account?: DetailsOfEachMT5Loginid) => void;
+    showTopUpModal: () => void;
 };
 
 type TContractReplay = {
@@ -998,5 +992,6 @@ export type TCoreStores = {
 };
 
 export type TStores = TCoreStores & {
+    exchange_rates: ExchangeRatesStore;
     feature_flags: FeatureFlagsStore;
 };

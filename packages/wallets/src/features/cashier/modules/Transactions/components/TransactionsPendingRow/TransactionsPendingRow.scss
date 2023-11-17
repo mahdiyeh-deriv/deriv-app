@@ -1,49 +1,22 @@
 .wallets-transactions-pending-row {
-    $root: &;
     width: 100%;
     height: 7.8rem;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1.8fr repeat(4, 1fr) repeat(2, 2fr);
     gap: 1.6rem;
-    align-items: flex-start;
+    align-items: center;
     border-top: 0.1rem solid var(--system-light-3-border, #e5e5e5);
-    padding: 1.6rem;
-
-    @include mobile {
-        height: unset;
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        padding: 1.6rem 0;
-    }
+    padding-inline: 1.6rem;
 
     &__column {
         display: flex;
         flex-direction: column;
     }
 
-    &__wallet-info {
+    &__details {
         display: flex;
-        order: -2;
-        align-items: center;
         width: max-content;
         gap: 0.8rem;
-    }
-
-    &__fields-container {
-        height: 100%;
-        display: flex;
-        flex-grow: 1;
-        gap: 1.6rem;
-        align-items: flex-start;
-
-        @include mobile {
-            order: 0;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-
-            #{$root}__column {
-                gap: 0.4rem;
-            }
-        }
     }
 
     &__transaction {
@@ -53,7 +26,6 @@
 
         &-amount {
             width: max-content;
-            align-self: center;
         }
 
         &-confirmations {
@@ -67,22 +39,8 @@
         &-status {
             width: 10.3rem;
             display: flex;
-            flex-grow: 1;
             justify-content: flex-end;
             align-items: center;
-            align-self: center;
-            justify-self: flex-end;
-
-            // unset default button style
-            border: unset;
-            padding: unset;
-            background-color: unset;
-            text-align: unset;
-
-            @include mobile {
-                align-self: flex-start;
-                order: -1;
-            }
 
             &-dot {
                 margin-right: 0.4rem;

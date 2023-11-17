@@ -1,36 +1,35 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { CSSProperties, useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { useCombobox } from 'downshift';
 import ArrowIcon from '../../../public/images/pointed-down-arrow-icon.svg';
 import reactNodeToString from '../../../utils/reactNodeToString';
 import { TGenericSizes } from '../types';
 import { WalletText } from '../WalletText';
-import WalletTextField, { WalletTextFieldProps } from '../WalletTextField/WalletTextField';
 import './WalletDropdown.scss';
 
 type TProps = {
     icon?: React.ReactNode;
-    label?: WalletTextFieldProps['label'];
+    label?: React.ReactNode;
     list: {
-        text?: React.ReactNode;
-        value?: string;
+        text: React.ReactNode;
+        value: string;
     }[];
     listHeight?: Extract<TGenericSizes, 'lg' | 'md' | 'sm'>;
-    name: WalletTextFieldProps['name'];
+    maxWidth?: CSSProperties['maxWidth'];
     onSelect: (value: string) => void;
-    value?: WalletTextFieldProps['value'];
-    variant?: 'comboBox' | 'prompt';
+    type?: 'comboBox' | 'prompt';
+    value: string | undefined;
 };
 
 const WalletDropdown: React.FC<TProps> = ({
-    icon = false,
+    icon,
     label,
     list,
     listHeight = 'md',
-    name,
+    maxWidth = '19.5rem',
     onSelect,
+    type = 'prompt',
     value,
-    variant = 'prompt',
 }) => {
     const [items, setItems] = useState(list);
     const [shouldFilterList, setShouldFilterList] = useState(false);
@@ -38,17 +37,7 @@ const WalletDropdown: React.FC<TProps> = ({
         setShouldFilterList(false);
         setItems(list);
     }, [list]);
-    const {
-        closeMenu,
-        getInputProps,
-        getItemProps,
-        getLabelProps,
-        getMenuProps,
-        getToggleButtonProps,
-        isOpen,
-        openMenu,
-    } = useCombobox({
-        defaultSelectedItem: items.find(item => item.value === value) ?? null,
+    const { getInputProps, getItemProps, getLabelProps, getMenuProps, getToggleButtonProps, isOpen } = useCombobox({
         items,
         itemToString(item) {
             return item ? reactNodeToString(item.text) : '';
@@ -71,43 +60,24 @@ const WalletDropdown: React.FC<TProps> = ({
         },
         onSelectedItemChange({ selectedItem }) {
             onSelect(selectedItem?.value ?? '');
-            closeMenu();
         },
+        selectedItem: items.find(item => item.value === value),
     });
-
-    const handleInputClick = useCallback(() => {
-        variant === 'comboBox' && setShouldFilterList(true);
-
-        if (isOpen) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    }, [closeMenu, isOpen, openMenu, variant]);
 
     useEffect(() => {
         setItems(list);
     }, [list]);
 
     return (
-        <div className='wallets-dropdown' {...getToggleButtonProps()}>
+        <div className='wallets-dropdown' style={{ maxWidth }}>
             <div className='wallets-dropdown__content'>
-                <WalletTextField
-                    name={name}
-                    onClickCapture={handleInputClick}
+                {icon && <div className='wallets-dropdown__icon'>{icon}</div>}
+                <input
+                    className='wallets-dropdown__field'
+                    id='dropdown-text'
                     onKeyUp={() => setShouldFilterList(true)}
                     placeholder={reactNodeToString(label)}
-                    readOnly={variant !== 'comboBox'}
-                    renderLeftIcon={() => icon}
-                    renderRightIcon={() => (
-                        <button
-                            className={classNames('wallets-dropdown__button', {
-                                'wallets-dropdown__button--active': isOpen,
-                            })}
-                        >
-                            <ArrowIcon />
-                        </button>
-                    )}
+                    readOnly={type !== 'comboBox'}
                     type='text'
                     value={value}
                     {...getInputProps()}
@@ -116,11 +86,19 @@ const WalletDropdown: React.FC<TProps> = ({
                     className={classNames('wallets-dropdown__label', {
                         'wallets-dropdown__label--with-icon': !!icon,
                     })}
-                    htmlFor={name}
+                    htmlFor='dropdown-text'
                     {...getLabelProps()}
                 >
                     {label}
                 </label>
+                <button
+                    className={classNames('wallets-dropdown__button', {
+                        'wallets-dropdown__button--active': isOpen,
+                    })}
+                    {...getToggleButtonProps()}
+                >
+                    <ArrowIcon />
+                </button>
             </div>
             <ul className={`wallets-dropdown__items wallets-dropdown__items--${listHeight}`} {...getMenuProps()}>
                 {isOpen &&

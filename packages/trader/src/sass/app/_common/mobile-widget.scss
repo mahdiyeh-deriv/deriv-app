@@ -1,7 +1,6 @@
 /** @define mobile-widget */
 .mobile-widget {
-    border-radius: $BORDER_RADIUS;
-    border-width: 0;
+    border-radius: 4px;
     padding: 1rem 0.8rem;
     height: 4rem;
     background-color: var(--general-main-1);
@@ -12,11 +11,6 @@
     flex: 1;
     position: relative;
 
-    &__button {
-        background: none;
-        border: none;
-        padding: 0;
-    }
     &__digit {
         border-radius: $BORDER_RADIUS;
         padding: 1rem 0.8rem;

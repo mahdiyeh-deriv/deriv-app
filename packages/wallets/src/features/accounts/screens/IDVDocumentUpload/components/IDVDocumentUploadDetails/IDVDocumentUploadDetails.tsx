@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlowTextField, InlineMessage, WalletText } from '../../../../../../components';
+import { InlineMessage, WalletText, WalletTextField } from '../../../../../../components';
 import SideNote from '../../../../../../public/images/accounts/side-note-example-image.svg';
 import './IDVDocumentUploadDetails.scss';
 
@@ -15,25 +15,23 @@ const IDVDocumentUploadDetails = () => {
             <div className='wallets-idv-document-details__body'>
                 <div className='wallets-idv-document-details__content'>
                     {/* TODO: Update account details using implemented Formik */}
-
-                    <FlowTextField
+                    <WalletTextField
+                        helperMessage='Your first name as in your identity document'
                         label='First name*'
-                        message='Your first name as in your identity document'
-                        name='firstName'
+                        maxWidth='35.9rem'
                         showMessage
                     />
-
-                    <FlowTextField
+                    <WalletTextField
+                        helperMessage='Your last name as in your identity document'
                         label='Last name*'
-                        message='Your last name as in your identity document'
-                        name='lastName'
+                        maxWidth='35.9rem'
                         showMessage
                     />
                     {/* TODO: Replace with DatePicker component*/}
-                    <FlowTextField
+                    <WalletTextField
+                        helperMessage='Your date of birth as in your identity document'
                         label='Date of birth*'
-                        message='Your date of birth as in your identity document'
-                        name='dateOfBirth'
+                        maxWidth='35.9rem'
                         showMessage
                         type='date'
                     />

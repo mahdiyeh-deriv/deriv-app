@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { useActiveWalletAccount } from '@deriv/api';
-import { ToggleSwitch, WalletDropdown, WalletText } from '../../../../components';
+import { WalletDropdown, WalletText } from '../../../../components';
 import useDevice from '../../../../hooks/useDevice';
 import FilterIcon from '../../../../public/images/filter.svg';
 import { TransactionsCompleted, TransactionsPending } from './components';
@@ -15,9 +15,8 @@ const filtersMapper: Record<string, Record<string, TFilterValue>> = {
     completed: {
         all: undefined,
         deposit: 'deposit',
-        withdrawal: 'withdrawal',
-        // eslint-disable-next-line sort-keys
         transfer: 'transfer',
+        withdrawal: 'withdrawal',
     },
     pending: {
         all: 'all',
@@ -72,14 +71,22 @@ const Transactions = () => {
                 {wallet?.currency_config?.is_crypto && (
                     <div className='wallets-transactions__toggle'>
                         <WalletText size='sm'>Pending Transactions</WalletText>
-                        <ToggleSwitch onChange={() => setIsPendingActive(!isPendingActive)} value={isPendingActive} />
+                        <input
+                            checked={isPendingActive}
+                            className='wallets-transactions__toggle-switch'
+                            id='toggle-pending'
+                            onChange={() => setIsPendingActive(!isPendingActive)}
+                            type='checkbox'
+                        />
+                        <label className='wallets-transactions__toggle-switch__label' htmlFor='toggle-pending'>
+                            <span className='wallets-transactions__toggle-switch__button' />
+                        </label>
                     </div>
                 )}
                 <WalletDropdown
                     icon={<FilterIcon />}
                     label='Filter'
                     list={filterOptionsList}
-                    name='wallets-transactions__dropdown'
                     onSelect={value => setFilterValue(value)}
                     value={filterValue}
                 />

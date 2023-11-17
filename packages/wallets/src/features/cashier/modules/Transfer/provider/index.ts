@@ -1,4 +1,3 @@
-import TransferProvider, { TTransferContext, useTransfer } from './TransferProvider';
+import TransferProvider, { useTransfer } from './TransferProvider';
 
 export { TransferProvider, useTransfer };
-export type { TTransferContext };

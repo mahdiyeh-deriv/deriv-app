@@ -34,7 +34,7 @@ const JurisdictionModal = () => {
         ? undefined
         : () => (
               <WalletButton
-                  disabled={!selectedJurisdiction || (selectedJurisdiction !== 'svg' && !isCheckBoxChecked)}
+                  disabled={!selectedJurisdiction || !isCheckBoxChecked}
                   isFullWidth={isMobile}
                   onClick={() => show(<MT5PasswordModal marketType={marketType} platform={platform} />)}
                   text='Next'
@@ -46,6 +46,7 @@ const JurisdictionModal = () => {
     return (
         <DynamicLeverageContext.Provider value={{ isDynamicLeverageVisible, toggleDynamicLeverage }}>
             <ModalStepWrapper
+                closeOnEscape
                 renderFooter={modalFooter}
                 shouldHideHeader={isDynamicLeverageVisible}
                 title={jurisdictionTitle}

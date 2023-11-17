@@ -1,11 +1,12 @@
 import React from 'react';
-import { WalletButton, WalletPasswordField, WalletText } from '../../../../components/Base';
-import { passwordChecker } from '../../../../components/Base/WalletPasswordField/PasswordFieldUtils';
+import { WalletButton } from '../../../../components/Base';
 import useDevice from '../../../../hooks/useDevice';
+import PasswordShowIcon from '../../../../public/images/ic-password-show.svg';
 import { TPlatforms } from '../../../../types';
 import { PlatformDetails } from '../../constants';
 import './CreatePassword.scss';
 
+// TODO: Refactor the unnecessary props out once FlowProvider is integrated
 type TProps = {
     icon: React.ReactNode;
     isLoading?: boolean;
@@ -26,21 +27,20 @@ const CreatePassword: React.FC<TProps> = ({
     const { isMobile } = useDevice();
 
     const title = PlatformDetails[platform].title;
-    const { score } = passwordChecker(password);
     return (
         <div className='wallets-create-password'>
             {!isMobile && icon}
-            <WalletText lineHeight='xl' weight='bold'>
-                Create a {title} password
-            </WalletText>
-            <WalletText align='center' size='sm'>
+            <div className='wallets-create-password-title'>Create a {title} password</div>
+            <span className='wallets-create-password-subtitle'>
                 You can use this password for all your {title} accounts.
-            </WalletText>
-
-            <WalletPasswordField label={`${title} password`} onChange={onPasswordChange} password={password} />
+            </span>
+            <div className='wallets-create-password-input'>
+                <input onChange={onPasswordChange} placeholder={`${title} password`} type='password' />
+                <PasswordShowIcon className='wallets-create-password-input-trailing-icon' />
+            </div>
             {!isMobile && (
                 <WalletButton
-                    disabled={!password || isLoading || score <= 2}
+                    disabled={!password || isLoading}
                     isLoading={isLoading}
                     onClick={onPrimaryClick}
                     size='lg'

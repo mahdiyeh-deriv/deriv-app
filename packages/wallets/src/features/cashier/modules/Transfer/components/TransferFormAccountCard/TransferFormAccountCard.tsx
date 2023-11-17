@@ -7,8 +7,6 @@ import {
     WalletText,
 } from '../../../../../../components';
 import useDevice from '../../../../../../hooks/useDevice';
-import { TWalletLandingCompanyName } from '../../../../../../types';
-import { getActiveWalletIcon, getTradingAppIcon } from '../../helpers';
 import type { TAccount } from '../../types';
 import './TransferFormAccountCard.scss';
 
@@ -35,24 +33,21 @@ const WalletTransferFormAccountCard: React.FC<TProps> = ({ account, activeWallet
                     {account?.account_category === 'wallet' ? (
                         <WalletCurrencyCard
                             currency={account?.currencyConfig?.display_code || 'USD'}
-                            isDemo={Boolean(account?.demo_account)}
+                            isDemo={Boolean(account?.isVirtual)}
                             size='sm'
                         />
                     ) : (
                         <WalletsAppLinkedWithWalletIcon
-                            appIcon={getTradingAppIcon(
-                                account,
-                                activeWallet?.landingCompanyName as TWalletLandingCompanyName
-                            )}
+                            appIcon={account?.appIcon || ''}
                             currency={activeWallet?.currency || ''}
-                            isDemo={Boolean(account?.demo_account)}
+                            isDemo={activeWallet?.isVirtual}
                             size='small'
-                            walletIcon={getActiveWalletIcon(activeWallet)}
+                            walletIcon={activeWallet?.activeWalletIcon || ''}
                         />
                     )}
                 </div>
                 {isInput && isMobile && (
-                    <WalletListCardBadge isDemo={Boolean(account?.demo_account)} label={account?.landingCompanyName} />
+                    <WalletListCardBadge isDemo={account?.isVirtual} label={account?.landingCompanyName} />
                 )}
             </div>
 
@@ -65,7 +60,7 @@ const WalletTransferFormAccountCard: React.FC<TProps> = ({ account, activeWallet
 
             {isModal && (
                 <div className='wallets-transfer-form-account-card__modal-badge'>
-                    <WalletListCardBadge isDemo={Boolean(account?.demo_account)} label={account?.landingCompanyName} />
+                    <WalletListCardBadge isDemo={account?.isVirtual} label={account?.landingCompanyName} />
                 </div>
             )}
         </div>

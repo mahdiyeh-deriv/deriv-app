@@ -1,35 +1,30 @@
-import React, { ChangeEvent, ComponentProps, forwardRef, Ref, useState } from 'react';
-import classNames from 'classnames';
-import { FormikErrors } from 'formik';
-import HelperMessage, { HelperMessageProps } from './HelperMessage';
+import React, { ChangeEvent, CSSProperties, forwardRef, InputHTMLAttributes, useState } from 'react';
+import MessageContainer, { MessageContainerProps } from './HelperMessage';
 import './WalletTextField.scss';
 
-export interface WalletTextFieldProps extends ComponentProps<'input'>, HelperMessageProps {
+export interface WalletTextFieldProps extends InputHTMLAttributes<HTMLInputElement>, MessageContainerProps {
     defaultValue?: string;
-    errorMessage?: FormikErrors<unknown> | FormikErrors<unknown>[] | string[] | string;
-    isInvalid?: boolean;
     label?: string;
-    renderLeftIcon?: () => React.ReactNode;
+    maxWidth?: CSSProperties['maxWidth'];
     renderRightIcon?: () => React.ReactNode;
     showMessage?: boolean;
 }
 
-const WalletTextField = forwardRef(
+const WalletTextField = forwardRef<HTMLInputElement, WalletTextFieldProps>(
     (
         {
             defaultValue = '',
-            isInvalid = false,
+            helperMessage,
             label,
             maxLength,
-            message,
+            maxWidth = '33rem',
             name = 'wallet-textfield',
             onChange,
-            renderLeftIcon,
             renderRightIcon,
             showMessage = false,
             ...rest
-        }: WalletTextFieldProps,
-        ref: Ref<HTMLInputElement>
+        },
+        ref
     ) => {
         const [value, setValue] = useState(defaultValue);
 
@@ -40,24 +35,17 @@ const WalletTextField = forwardRef(
         };
 
         return (
-            <div
-                className={classNames('wallets-textfield', {
-                    'wallets-textfield--error': isInvalid,
-                })}
-            >
+            <div className='wallets-textfield' style={{ maxWidth }}>
                 <div className='wallets-textfield__box'>
-                    {typeof renderLeftIcon === 'function' && (
-                        <div className='wallets-textfield__icon-left'>{renderLeftIcon()}</div>
-                    )}
                     <input
                         className='wallets-textfield__field'
                         id={name}
                         maxLength={maxLength}
                         onChange={handleChange}
                         placeholder={label}
-                        ref={ref}
                         value={value}
                         {...rest}
+                        ref={ref}
                     />
                     {label && (
                         <label className='wallets-textfield__label' htmlFor={name}>
@@ -65,11 +53,13 @@ const WalletTextField = forwardRef(
                         </label>
                     )}
                     {typeof renderRightIcon === 'function' && (
-                        <div className='wallets-textfield__icon-right'>{renderRightIcon()}</div>
+                        <div className='wallets-textfield__icon'>{renderRightIcon()}</div>
                     )}
                 </div>
                 <div className='wallets-textfield__message-container'>
-                    {showMessage && <HelperMessage inputValue={value} maxLength={maxLength} message={message} />}
+                    {showMessage && (
+                        <MessageContainer helperMessage={helperMessage} inputValue={value} maxLength={maxLength} />
+                    )}
                 </div>
             </div>
         );

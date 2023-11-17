@@ -1,22 +1,20 @@
 import React from 'react';
-import { Score } from './PasswordFieldUtils';
 
 export interface PasswordMeterProps {
-    score: Score;
+    strength?: number;
 }
 
-const PasswordMeter: React.FC<PasswordMeterProps> = ({ score }) => {
-    const strengthColors = {
+const PasswordMeter: React.FC<PasswordMeterProps> = ({ strength }) => {
+    const strengthColors: { [key: number]: string } = {
         0: 'wallets-password__meter--initial',
         1: 'wallets-password__meter--weak',
         2: 'wallets-password__meter--moderate',
         3: 'wallets-password__meter--strong',
         4: 'wallets-password__meter--complete',
     };
-
     return (
         <div className='wallets-password__meter'>
-            <div className={strengthColors[score ?? 0]} />
+            <div className={strengthColors[strength ?? 0]} />
         </div>
     );
 };

@@ -17,17 +17,15 @@ import { TServerError } from '../Types';
 import { LANGUAGE_CODES } from '../Constants/onfido';
 
 export const documentAdditionalError = (
-    additional_document_value: string | undefined,
-    document_additional_config: FormikValues
+    document_additional: string | undefined,
+    document_additional_format: string
 ) => {
     let error_message = null;
-    if (!additional_document_value) {
-        error_message = localize('Please enter your {{document_name}}. ', {
-            document_name: document_additional_config?.display_name?.toLowerCase() ?? localize('document number'),
-        });
+    if (!document_additional) {
+        error_message = localize('Please enter your document number. ');
     } else {
-        const format_regex = getRegex(document_additional_config?.format);
-        if (!format_regex.test(additional_document_value)) {
+        const format_regex = getRegex(document_additional_format);
+        if (!format_regex.test(document_additional)) {
             error_message = localize('Please enter the correct format. ');
         }
     }
@@ -105,8 +103,6 @@ export const generatePlaceholderText = (selected_doc: string): string => {
             return localize('Enter Driver License Reference number');
         case 'ssnit':
             return localize('Enter your SSNIT number');
-        case 'national_id_no_photo':
-            return localize('Enter your National Identification Number (NIN)');
         default:
             return localize('Enter your document number');
     }
@@ -151,8 +147,8 @@ export const isDocumentTypeValid = (document_type: FormikValues) => {
     return undefined;
 };
 
-export const isAdditionalDocumentValid = (document_type: FormikValues, additional_document_value?: string) => {
-    const error_message = documentAdditionalError(additional_document_value, document_type?.additional);
+export const isAdditionalDocumentValid = (document_type: FormikValues, document_additional?: string) => {
+    const error_message = documentAdditionalError(document_additional, document_type.additional?.format);
     if (error_message) {
         return localize(error_message) + getExampleFormat(document_type.additional?.example_format);
     }
@@ -170,9 +166,6 @@ export const isDocumentNumberValid = (document_number: string, document_type: Fo
                 break;
             case 'ssnit':
                 document_name = 'SSNIT number';
-                break;
-            case 'national_id_no_photo':
-                document_name = 'NIN';
                 break;
             default:
                 document_name = 'document number';

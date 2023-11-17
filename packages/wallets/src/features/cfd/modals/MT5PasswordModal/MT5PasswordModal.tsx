@@ -7,7 +7,6 @@ import {
     useSettings,
     useTradingPlatformPasswordChange,
 } from '@deriv/api';
-import { SentEmailContent } from '../../../../components';
 import { ModalStepWrapper, ModalWrapper, WalletButton, WalletButtonGroup } from '../../../../components/Base';
 import { useModal } from '../../../../components/ModalProvider';
 import useDevice from '../../../../hooks/useDevice';
@@ -30,7 +29,7 @@ const MT5PasswordModal: React.FC<TProps> = ({ marketType, platform }) => {
     const { data: mt5Accounts } = useMT5AccountsList();
     const { data: availableMT5Accounts } = useAvailableMT5Accounts();
     const { data: settings } = useSettings();
-    const { hide, show } = useModal();
+    const { hide } = useModal();
     const { isMobile } = useDevice();
 
     const hasMT5Account = mt5Accounts?.find(account => account.login);
@@ -87,19 +86,7 @@ const MT5PasswordModal: React.FC<TProps> = ({ marketType, platform }) => {
         if (hasMT5Account)
             return (
                 <WalletButtonGroup>
-                    <WalletButton
-                        isFullWidth
-                        onClick={() => {
-                            show(
-                                <ModalStepWrapper title="We've sent you an email">
-                                    <SentEmailContent platform={platform} />
-                                </ModalStepWrapper>
-                            );
-                        }}
-                        size='lg'
-                        text='Forgot password?'
-                        variant='outlined'
-                    />
+                    <WalletButton isFullWidth size='lg' text='Forgot password?' variant='outlined' />
                     <WalletButton
                         disabled={!password || createMT5AccountLoading || tradingPlatformPasswordChangeLoading}
                         isFullWidth
@@ -164,7 +151,7 @@ const MT5PasswordModal: React.FC<TProps> = ({ marketType, platform }) => {
     }
 
     return (
-        <ModalWrapper hideCloseButton={isSuccess}>
+        <ModalWrapper closeOnEscape hideCloseButton={isSuccess}>
             {isSuccess && (
                 <CFDSuccess
                     description={`You can now start practicing trading with your ${marketTypeTitle} ${
@@ -186,13 +173,6 @@ const MT5PasswordModal: React.FC<TProps> = ({ marketType, platform }) => {
                         marketType={marketType}
                         onPasswordChange={e => setPassword(e.target.value)}
                         onPrimaryClick={onSubmit}
-                        onSecondaryClick={() =>
-                            show(
-                                <ModalWrapper>
-                                    <SentEmailContent platform={platform} />
-                                </ModalWrapper>
-                            )
-                        }
                         password={password}
                         platform='mt5'
                     />
