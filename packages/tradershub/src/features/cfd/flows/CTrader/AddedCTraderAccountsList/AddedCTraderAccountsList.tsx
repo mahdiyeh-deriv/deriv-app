@@ -32,7 +32,7 @@ const AddedCTraderAccountsList: React.FC = () => {
                 // todo: open transfer modal
                 variant='outlined'
             >
-                Transfer
+                Transfer funds
             </Button>
             <Button>Open</Button>
         </div>
